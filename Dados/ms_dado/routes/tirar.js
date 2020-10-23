@@ -2,9 +2,9 @@ var express = require('express');
 var router = express.Router();
 
 /* GET tirar dados listing. */
-router.get('/:cantidad', function(req, res, next) { // /tirar/3
+router.get('/', function(req, res, next) { // /tirar/3
   try{
-    var cantidad= req.params.cantidad;
+    var cantidad= req.query.cantidad;
     var dados=0;
 
     const regex = /^[0-9]*$/;
