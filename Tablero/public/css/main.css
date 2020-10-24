@@ -1,0 +1,13 @@
+body {
+    background-image:url('../images/tablero.png');   
+    /*background-attachment:fixed;*/
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 950px;
+    width: 1000px;
+    color: #000000;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    
+}
