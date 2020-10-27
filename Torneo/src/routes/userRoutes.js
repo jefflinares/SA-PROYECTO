@@ -1,12 +1,7 @@
 const Usuario = require('../models/user');
 
-module.exports = function (app){
-    // app.get('/users', (req, res) => {
-    //     Usuario.getUsers((err, data) => {
-    //         res.status.json(data);
-    //     });
-    // });
-
+module.exports = function (app){    
+    //Routes
     app.get('/users', (req, res) => {
         Usuario.getBienvenida((err, data) => {
             //res.status.json(data);
@@ -28,6 +23,7 @@ module.exports = function (app){
 
          Usuario.insertUser(userData, (err, data) => {
              if (data && data.insertId) {
+                 console.log(data);
                  res.json({
                      success: true,
                      msg: 'Usuario reconocido', 
