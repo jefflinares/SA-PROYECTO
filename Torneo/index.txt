@@ -1,0 +1,32 @@
+doctype html
+html
+  head
+    meta(http-equiv="Content-Type", content="text/html;charset=UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js")
+    link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css")
+    link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css")
+    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js")
+
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+  div(style="margin:100px;")
+    nav(class="navbar navbar-inverse navbar-static-top")
+      div(class="container")
+        a(class="navbar-brand" href="/" text="MS TORNEOS")
+        ul(class="nav navbar-nav")
+          li(class="active")
+            a(href="/" text="Servicios")
+          li
+            a(href="/" text="Torneos")
+          li
+            a(href="/" text="Llaves")
+    div(class="jumbotron" style="padding:40px;")
+      h1 Bienvenido!!
+      p Este es el microservicio de administración de torneos, desde aquí se podrán crear nuevos torenos y asignar nuevos jugadores a cada torneo y cada una de sus llaves.
+      p
+        a(class="btn btn-primary btn-lg" href="#" role="button" text="Crear Torneo")
+
+
+    block content
