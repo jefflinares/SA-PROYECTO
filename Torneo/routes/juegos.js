@@ -10,7 +10,7 @@ router.get('/', (req, res) => {
     const regex = /^[0-9]*$/;
     const verificacion = regex.text(id);
 
-    var objetoPartida = {
+    var objetoJuego = {
         id:0,
         Nombre: "example",
         IP: "0.0.0.0"
@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
 
     if(verificacion == false){
         res.statusMessage = "Id de partida no válido";
-        res.status(404).json(objetoPartida);
+        res.status(404).json(objetoJuego);
     }else{
         var idPartida = Number(id);
         //aqui se debe hacer una búsqueda de los datos del juego en base de datos.
@@ -26,9 +26,9 @@ router.get('/', (req, res) => {
         var sql = 'SELECT * FROM JUEGOS WHERE id =' + id;
         database.query(sql)
             .then(rows => {
-                objetoPartida.id = Number(rows[0].id);
-                objetoPartida.Nombre = rows[0].Nombre;
-                objetoPartida.IP = rows[0].IP;
+                objetoJuego.id = Number(rows[0].id);
+                objetoJuego.Nombre = rows[0].Nombre;
+                objetoJuego.IP = rows[0].IP;
             }, err => {
                 return database.close().then(() => {
                     throw err;
@@ -37,7 +37,7 @@ router.get('/', (req, res) => {
             .catch(err => {
                 console.log(err);
                 res.statusMessage = "Juego no encontrado";
-                res.status(404).json(objetoPartida);
+                res.status(404).json(objetoJuego);
             });
     }
 });
@@ -45,7 +45,7 @@ router.get('/', (req, res) => {
 router.post('/', function (req, res){
     var database = new db();
 
-    var objetoPartida = {
+    var objetoJuego = {
         id: 0,
         Nombre: "example", 
         IP: "0.0.0.0"
@@ -61,35 +61,35 @@ router.post('/', function (req, res){
     if(idJuego == undefined || nombreJuego == undefined || IPJuego==undefined){
         console.log("No se encontraron datos en la BD");
         res.statusMessage = "Datos incorrectos";
-        res.status(406).json(objetoPartida);
+        res.status(406).json(objetoJuego);
     }else{
         try{
             var query = database.query('INSERT INTO JUEGOS(id, Nombre, IP) VALUES(?,?,?)', [idJuego, nombreJuego, IPJuego] , function (error, result){
                 if(error){
                     console.log("Error al insertar en la base de datos.");
                     res.statusMessage = "Datos icorrectos"
-                    res.status(406).json(objetoPartida);
+                    res.status(406).json(objetoJuego);
                 }});
         }
         catch(x){
             console.log("Excepción no controlada: "+ x);
             res.statusMessage = "Datos incorrectos";
-            res.status(406).json(objetoPartida);
+            res.status(406).json(objetoJuego);
             return;
         }
 
-        var sql = 'SELECT ID FROM USUARIO WHERE Nombre=\''+idJuego+'\'';
+        var sql = 'SELECT ID FROM JUEGO WHERE Nombre=\''+nombreJuego+'\'';
         database.query(sql)
             .then(rows => {
                 var num = Number(rows[0].id);
                 console.log(num);
-                objetoPartida.id = num;
+                objetoJuego.id = num;
                 database.close();
 
-                objetoPartida.id = idJuego;
-                objetoPartida.Nombre = nombreJuego;
-                objetoPartida.IP = IPJuego;
-                res.status(201).json(objetoPartida);
+                objetoJuego.id = idJuego;
+                objetoJuego.Nombre = nombreJuego;
+                objetoJuego.IP = IPJuego;
+                res.status(201).json(objetoJuego);
 
             }, err => {
                 return database.close().then(() => {
@@ -99,7 +99,7 @@ router.post('/', function (req, res){
             .catch(err => {
                 console.log(err);
                 res.statusMessage = "Datos no correctos.";
-                res.status(406).json(objetoPartida);
+                res.status(406).json(objetoJuego);
             });
     }
 });

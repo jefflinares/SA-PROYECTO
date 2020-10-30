@@ -1,16 +1,32 @@
 extends layout
-
 block content
     div(class="jumbotron" style="padding:40px;")
         h1  #{title}
-        p En esta sección podrá visualizar el listado de torneos creados.
+        p En esta sección podrá gestionar todo lo relacionado con los torneos.
 
     .row
       .col-md-4
-        h2 Contenido
+        h2 CREAR TORNEO
         p
-          | Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
+          | Cree un nuevo torneo
         p
+          label(for="textJuego") Juego: 
+          br
+          input(type="text", name="textJuego")
+          br
+          
+          label(for="textTotal") Total de Jugadores:
+          br
+          input(type="text", name="textTotal")
+          br
+          label(for="textGanador") Ganador:
+          br
+          input(type="text", name="textGanador")
+          br
+          
+          button(type="submit" name="botonCrearTorneo") Crear
+          
+          br
           a.btn.btn-secondary(href='#' role='button') Ver más &raquo;
       .col-md-4
         h2 Contenido
@@ -25,3 +41,4 @@ block content
         p
           a.btn.btn-secondary(href='#' role='button') Ver más &raquo;
     hr
+
