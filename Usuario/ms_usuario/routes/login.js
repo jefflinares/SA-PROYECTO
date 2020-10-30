@@ -17,6 +17,7 @@ router.get('/', function(req, res, next) {
   
   var objectUsuario={
     id:0,
+    email:"",
     nombres:"string",
     apellidos:"string",
     administrador:false
@@ -51,6 +52,7 @@ router.get('/', function(req, res, next) {
           objectUsuario.nombres=rows[0].NOMBRES;
           objectUsuario.apellidos=rows[0].APELLIDOS;
           var numAdmin=rows[0].ADMINISTRADOR;
+          objectUsuario.email=usuario.email;
           if(numAdmin==0){
             objectUsuario.administrador=false;
           }
