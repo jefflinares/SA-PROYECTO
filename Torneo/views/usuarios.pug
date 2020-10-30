@@ -7,21 +7,88 @@ block content
 
     .row
       .col-md-4
-        h2 Contenido
+        h2 Agregar Usuario
         p
-          | Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
-        p
-          a.btn.btn-secondary(href='#' role='button') Ver más &raquo;
+          form(action="http://localhost:3000/usuarios/insertar", method="post")
+            label(for="textEmail") Email: 
+            br
+            input(type="text", name="textEmail")
+            br
+          
+            label(for="textNombre") Nombre:
+            br
+            input(type="text", name="textNombre")
+            br
+            label(for="textApellido") Apellido:
+            br
+            input(type="text", name="textApellido")
+            br
+            label(for="textPassword") Password:
+            br
+            input(type="password", name="textPassword")
+            br
+            label(for="textAdmin") Administrador:
+            br
+            input(type="checkbox", name="checkAdministrador")
+            br 
+            button(type="submit" name="botonAgregar") Agregar
+
+            br
       .col-md-4
-        h2 Contenido
+        h2 Actualizar Usuario
         p
-          | Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
-        p
-          a.btn.btn-secondary(href='#' role='button') Ver más &raquo;
+          form(action="http://localhost:3000/usuarios/insertar", method="put")
+            label(for="textEmail") Email: 
+            br
+            input(type="text", name="textEmail")
+            br
+          
+            label(for="textNombre") Nombre:
+            br
+            input(type="text", name="textNombre")
+            br
+            label(for="textApellido") Apellido:
+            br
+            input(type="text", name="textApellido")
+            br
+            label(for="textPassword") Password:
+            br
+            input(type="password", name="textPassword")
+            br
+            label(for="textAdmin") Administrador:
+            br
+            input(type="checkbox", name="checkAdministrador")
+            br 
+            button(type="submit" name="botonAgregar") Actualizar
+
+            br
       .col-md-4
-        h2 Contenido
+        h2 Eliminar Usuario
         p
-          | Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
-        p
-          a.btn.btn-secondary(href='#' role='button') Ver más &raquo;
+        
+          form(action="http://localhost:3000/usuarios/insertar", method="post")
+            label(for="textEmail") Email: 
+            br
+            input(type="text", name="textEmail")
+            br
+          
+            label(for="textNombre") Nombre:
+            br
+            input(type="text", name="textNombre")
+            br
+            label(for="textApellido") Apellido:
+            br
+            input(type="text", name="textApellido")
+            br
+            label(for="textPassword") Password:
+            br
+            input(type="password", name="textPassword")
+            br
+            label(for="textAdmin") Administrador:
+            br
+            input(type="checkbox", name="checkAdministrador")
+            br 
+            button(type="submit" name="botonAgregar") Eliminar
+
+            br
     hr
