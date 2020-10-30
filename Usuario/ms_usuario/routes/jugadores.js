@@ -6,8 +6,8 @@ var Db = require('./Db.js');
 
 
 /* GET users listing. */
-router.get('/', function(req, res, next) { //consigue los datos de un jugador
-  var id= req.query.id;
+router.get('/:id', function(req, res, next) { //consigue los datos de un jugador
+  var id= req.params.id;
   console.log(id);
   const regex = /^[0-9]*$/;
   const verificacion = regex.test(id); 
@@ -61,8 +61,8 @@ router.get('/', function(req, res, next) { //consigue los datos de un jugador
   }
 });
 
-router.put('/', function (req, res) { //Actualiza los datos de un jugador
-  var id= req.query.id;
+router.put('/:id', function (req, res) { //Actualiza los datos de un jugador
+  var id= req.params.id;
   const regex = /^[0-9]*$/;
   const verificacion = regex.test(id); 
 
