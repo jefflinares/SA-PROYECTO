@@ -108,8 +108,7 @@ function getToken(){
         if (res.statusCode==201){
           var cuerpo = JSON.parse(body.body)       
           console.log(token_acceso);  
-          var token_verify=verify(cuerpo);
-          var token_decode= decode(token_verify);
+          
           return 
         }
         else {
