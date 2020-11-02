@@ -20,8 +20,8 @@ router.get('/', function(req, res, next) {
     token = token.replace('Bearer ', '')
     switch (validar(token, 'usuarios.login')){
       case 0: 
-      case 1: res.status(401).send({msg: 'token no valido'});  return; 
-      case 3: res.status(401).send({msg: 'token expirado'});  return; 
+      case 1: res.status(403).send({msg: 'token no valido'});  return; 
+      case 3: res.status(403).send({msg: 'token expirado'});  return; 
       case 2: break;
     }
   //Fin de verificacion de token

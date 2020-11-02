@@ -22,8 +22,8 @@ router.get('/:id', function(req, res, next) { //consigue los datos de un jugador
   token = token.replace('Bearer ', '')
   switch (validar(token, 'usuarios.jugadores.get')){
     case 0: 
-    case 1: res.status(401).send({msg: 'token no valido'});  return; 
-    case 3: res.status(401).send({msg: 'token expirado'});  return; 
+    case 1: res.status(403).send({msg: 'token no valido'});  return; 
+    case 3: res.status(403).send({msg: 'token expirado'});  return; 
     case 2: break;
   }
   //Fin de verificacion de token
@@ -91,8 +91,8 @@ router.put('/:id', function (req, res) { //Actualiza los datos de un jugador
   token = token.replace('Bearer ', '')
   switch (validar(token, 'usuarios.jugadores.put')){
     case 0: 
-    case 1: res.status(401).send({msg: 'token no valido'});  return; 
-    case 3: res.status(401).send({msg: 'token expirado'});  return; 
+    case 1: res.status(403).send({msg: 'token no valido'});  return; 
+    case 3: res.status(403).send({msg: 'token expirado'});  return; 
     case 2: break;
   }
   //Fin de verificacion de token
@@ -160,8 +160,8 @@ router.post('/', function (req, res) { //Actualiza los datos de un jugador
    token = token.replace('Bearer ', '')
    switch (validar(token, 'usuarios.jugadores.post')){
      case 0: 
-     case 1: res.status(401).send({msg: 'token no valido'});  return; 
-     case 3: res.status(401).send({msg: 'token expirado'});  return; 
+     case 1: res.status(403).send({msg: 'token no valido'});  return; 
+     case 3: res.status(403).send({msg: 'token expirado'});  return; 
      case 2: break;
    }
    //Fin de verificacion de token
