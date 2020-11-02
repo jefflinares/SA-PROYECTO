@@ -236,18 +236,18 @@ router.post('/', function (req, res) { //Actualiza los datos de un jugador
 });
 router.get('/', function(req,res, next){
   //Verificacion de Token
-  //var token = req.headers['authorization']     
-  //if(!token){         
-  //    res.status(401).send({error: "Es necesario el token de autenticación"})         
-  //   return     
-  //}      
-  //token = token.replace('Bearer ', '')
-  //switch (validar(token, 'usuarios.jugadores.get')){
-    //case 0: 
-    //case 1: res.status(403).send({msg: 'token no valido'});  return; 
-    //case 3: res.status(403).send({msg: 'token expirado'});  return; 
-    //case 2: break;
-  //}
+  var token = req.headers['authorization']     
+  if(!token){         
+     res.status(401).send({error: "Es necesario el token de autenticación"})         
+     return     
+  }      
+  oken = token.replace('Bearer ', '')
+  switch (validar(token, 'usuarios.jugadores.get')){
+    case 0: 
+    case 1: res.status(403).send({msg: 'token no valido'});  return; 
+    case 3: res.status(403).send({msg: 'token expirado'});  return; 
+    case 2: break;
+  }
   //Fin de verificacion de token
   //Consulta Aqui
   var database= new Db();
