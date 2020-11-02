@@ -234,6 +234,51 @@ router.post('/', function (req, res) { //Actualiza los datos de un jugador
         });
     }
 });
+router.get('/', function(req,res, next){
+  //Verificacion de Token
+  //var token = req.headers['authorization']     
+  //if(!token){         
+  //    res.status(401).send({error: "Es necesario el token de autenticación"})         
+  //   return     
+  //}      
+  //token = token.replace('Bearer ', '')
+  //switch (validar(token, 'usuarios.jugadores.get')){
+    //case 0: 
+    //case 1: res.status(403).send({msg: 'token no valido'});  return; 
+    //case 3: res.status(403).send({msg: 'token expirado'});  return; 
+    //case 2: break;
+  //}
+  //Fin de verificacion de token
+  //Consulta Aqui
+  var database= new Db();
+  var sql = 'SELECT ID as id, EMAIL as email, NOMBRES as nombres, APELLIDOS AS apellidos, ADMINISTRADOR as administrador from USUARIO';
+  database.query(sql)
+    .then(rows => {
+        for (let ind = 0; ind < rows.length; ind++) {
+          const element = rows[ind];
+          if(element.administrador==1){
+            element.administrador=true;
+          }
+          else{
+            element.administrador=false;
+          }
+        }
+       
+        database.close();
+        res.statusMessage="Consigue el listado de todos los jugadores";
+        res.status(200).json(rows);
+      
+    }, err => {
+        return database.close().then(() => {
+            throw err;
+        })
+    })
+    .catch(err => {
+        console.log(err);
+        res.statusMessage="Listado no encontrado";
+        res.status(404).json({});
+    });
+});
 function validar(token, metodo){
   var token_verify=verify(token);
   if(token_verify){
