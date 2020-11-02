@@ -6,4 +6,3 @@ ADD ms_dado/package.json /src/package.json
 RUN npm install
 ADD ms_dado/nodemon.json /src/nodemon.json
 EXPOSE 3000
-CMD nodemon app.js
