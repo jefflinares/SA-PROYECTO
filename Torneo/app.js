@@ -1,4 +1,4 @@
-
+const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 const config = require('./config');
 const PORT = config.PORT;////para utilizar el puerto definido por la nube, sino utilizar el puerto 3000
 
@@ -10,6 +10,9 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/usuarios');
+var juegosRouter = require('./routes/juegos');
+var torneosRouter = require('./routes/torneos');
+var partidasRouter = require('./routes/partidas');
 
 var app = express();
 var token = getToken();
@@ -30,7 +33,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 //app.use('/users', usersRouter);
 app.use('/usuarios', usersRouter);
-//app.use('/torneos', usersRouter);
+app.use('/juegos', juegosRouter);
+app.use('/partidas', partidasRouter);
+app.use('/torneos', torneosRouter);
+app.use('/partidas', partidasRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -54,8 +60,9 @@ app.listen(PORT, () => {
 });
 
 function getToken(){
-  var url = config.JWT_SERVICE_HOST + ":" + config.JWT_SERVICE_PORT + "/token";
-
+  var access_token;
+  var url = "http://" + config.JWT_SERVICE_HOST + ":" + config.JWT_SERVICE_PORT + "/token";
+  
     var req = new XMLHttpRequest();
     req.open("POST",url);
     req.setRequestHeader('Authorization', 'Bearer ' + access_token);
@@ -79,4 +86,5 @@ function getToken(){
     }
     req.send(text);
 }
+
 module.exports = {app, token};

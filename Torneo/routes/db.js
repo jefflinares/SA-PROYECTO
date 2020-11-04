@@ -1,17 +1,19 @@
 'user strict';
 
 const mysql = require('mysql');
+const config = require('../config');
 
 class db {
     constructor() {
         this.connection = mysql.createConnection({
             host: 'localhost',
             user: 'root',
-            password: 'password',
-            database: 'juegos_db',
-            port: 3306
+            password: 'admin',
+            database: 'bdtorneos',
+            port: 3306,
+            multipleStatements: true
         });
-
+        
         this.connection.connect(
             function(error){
                 try{
@@ -25,6 +27,8 @@ class db {
                 }
             }
         );
+
+        //this.connection.end();
     }
 
     query(sql, args){
@@ -41,8 +45,10 @@ class db {
 
     close(){
         return new Promise((resolve, reject) => {
-            if(err){return reject(err)}
-            else{resolve();}
+            this.connection.end(err => {
+                if(err){return reject(err)}
+                else{resolve();}
+            });
         });
     }
 }

@@ -84,4 +84,58 @@ router.post('/', function (req, res){
     }
 });
 
+
+router.get('/obtenerJuegos', (req, res) => {
+    var id = req.query.id;
+    console.log(id);
+    const regex = /^[0-9]*$/;
+    const verificacion = regex.text(id);
+
+    //información de torneo tentativa 
+    var objetoTorneo = {
+        id:0,
+        Juego: "example",
+        TotalJugadores: 0, 
+        Ganador: "empty"
+    }
+
+    if(verificacion == false){
+        res.statusMessage = "Id de partida no válido";
+        res.status(404).json(objetoJuego);
+    }else{
+        var idTorneo = Number(id);
+        //aqui se debe hacer una búsqueda de los datos del juego en base de datos.
+        var database = new db();
+        var sql = 'SELECT * FROM TORNEO WHERE id =' + id;
+        database.query(sql)
+            .then(rows => {
+                objetoTorneo.id = Number(rows[0].id);
+                objetoTorneo.Juego = rows[0].Juego;
+                objetoTorneo.TotalJugadores = rows[0].TotalJugadores;
+                objetoTorneo.Ganador = rows[0].Ganador;
+            }, err => {
+                return database.close().then(() => {
+                    throw err;
+                })
+            })
+            .catch(err => {
+                console.log(err);
+                res.statusMessage = "Juego no encontrado";
+                res.status(404).json(objetoTorneo);
+            });
+    }
+});
+
+//funcion para generar el uuid para la partida
+function crear_uuid(){
+    var dt = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (dt + Math.random()*16)%16 | 0;
+        dt = Math.floor(dt/16);
+        return (c=='x' ? r :(r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+}
+
+
 module.exports = router;

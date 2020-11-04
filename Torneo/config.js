@@ -14,7 +14,9 @@ module.exports = {
     JUEGOS_SERVICE_PORT: process.env.JUEGOS_SERVICE_PORT || 3000,
     DATABASE_HOST: process.env.DATABASE_HOST || "localhost",
     DATABASE_NAME: process.env.DATABASE_NAME || "BDTORNEOS",
-    DATABASE_PASSWORD: process.env.DATABASE_PASSWORD || "torneos1234",
+    DATABASE_USER: process.env.DATABASE_USER || "root",
+    DATABASE_PORT: process.env.DATABASE_PORT || 3306,
+    DATABASE_PASSWORD: process.env.DATABASE_PASSWORD || "admin", //"torneos1234",
     JWT_SERVICE_HOST: process.env.JWT_SERVICE_HOST || "172.26.0.1",
     JWT_SERVICE_PORT: process.env.JWT_SERVICE_PORT || 3000
 
