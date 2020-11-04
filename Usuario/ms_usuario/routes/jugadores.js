@@ -1,13 +1,33 @@
 var express = require('express');
 var router = express.Router();
 const bodyParser = require('body-parser');
-const jwt   = require('jsonwebtoken');
+
 router.use(bodyParser.json());
 var Db = require('./Db.js');
+
+const jwt   = require('jsonwebtoken');
+const fs   = require('fs');
+var publicKEY  = fs.readFileSync('./keys/public.key', 'utf8');  
 
 
 /* GET users listing. */
 router.get('/:id', function(req, res, next) { //consigue los datos de un jugador
+  
+  //Verificacion de Token
+  var token = req.headers['authorization']     
+  if(!token){         
+      res.status(401).send({error: "Es necesario el token de autenticación"})         
+      return     
+  }      
+  token = token.replace('Bearer ', '')
+  switch (validar(token, 'usuarios.jugadores.get')){
+    case 0: 
+    case 1: res.status(403).send({msg: 'token no valido'});  return; 
+    case 3: res.status(403).send({msg: 'token expirado'});  return; 
+    case 2: break;
+  }
+  //Fin de verificacion de token
+
   var id= req.params.id;
   console.log(id);
   const regex = /^[0-9]*$/;
@@ -61,8 +81,22 @@ router.get('/:id', function(req, res, next) { //consigue los datos de un jugador
       });
   }
 });
-
 router.put('/:id', function (req, res) { //Actualiza los datos de un jugador
+  //Verificacion de Token
+  var token = req.headers['authorization']     
+  if(!token){         
+      res.status(401).send({error: "Es necesario el token de autenticación"})         
+      return     
+  }      
+  token = token.replace('Bearer ', '')
+  switch (validar(token, 'usuarios.jugadores.put')){
+    case 0: 
+    case 1: res.status(403).send({msg: 'token no valido'});  return; 
+    case 3: res.status(403).send({msg: 'token expirado'});  return; 
+    case 2: break;
+  }
+  //Fin de verificacion de token
+
   var id= req.params.id;
   const regex = /^[0-9]*$/;
   const verificacion = regex.test(id); 
@@ -117,6 +151,22 @@ router.put('/:id', function (req, res) { //Actualiza los datos de un jugador
   }
 });
 router.post('/', function (req, res) { //Actualiza los datos de un jugador
+   //Verificacion de Token
+   var token = req.headers['authorization']     
+   if(!token){         
+       res.status(401).send({error: "Es necesario el token de autenticación"})         
+       return     
+   }      
+   token = token.replace('Bearer ', '')
+   switch (validar(token, 'usuarios.jugadores.post')){
+     case 0: 
+     case 1: res.status(403).send({msg: 'token no valido'});  return; 
+     case 3: res.status(403).send({msg: 'token expirado'});  return; 
+     case 2: break;
+   }
+   //Fin de verificacion de token
+  
+  
   var database = new Db();
 
   var objectUsuario={
@@ -184,4 +234,93 @@ router.post('/', function (req, res) { //Actualiza los datos de un jugador
         });
     }
 });
+router.get('/', function(req,res, next){
+  //Verificacion de Token
+  var token = req.headers['authorization']     
+  if(!token){         
+     res.status(401).send({error: "Es necesario el token de autenticación"})         
+     return     
+  }      
+  oken = token.replace('Bearer ', '')
+  switch (validar(token, 'usuarios.jugadores.get')){
+    case 0: 
+    case 1: res.status(403).send({msg: 'token no valido'});  return; 
+    case 3: res.status(403).send({msg: 'token expirado'});  return; 
+    case 2: break;
+  }
+  //Fin de verificacion de token
+  //Consulta Aqui
+  var database= new Db();
+  var sql = 'SELECT ID as id, EMAIL as email, NOMBRES as nombres, APELLIDOS AS apellidos, ADMINISTRADOR as administrador from USUARIO';
+  database.query(sql)
+    .then(rows => {
+        for (let ind = 0; ind < rows.length; ind++) {
+          const element = rows[ind];
+          if(element.administrador==1){
+            element.administrador=true;
+          }
+          else{
+            element.administrador=false;
+          }
+        }
+       
+        database.close();
+        res.statusMessage="Consigue el listado de todos los jugadores";
+        res.status(200).json(rows);
+      
+    }, err => {
+        return database.close().then(() => {
+            throw err;
+        })
+    })
+    .catch(err => {
+        console.log(err);
+        res.statusMessage="Listado no encontrado";
+        res.status(404).json({});
+    });
+});
+function validar(token, metodo){
+  var token_verify=verify(token);
+  if(token_verify){
+    var token_decode= decode(token);
+    if( token_decode.payload.scope.indexOf(metodo)==-1){
+      return 1; //no tiene acceso al metodo
+    }
+    else{
+      const unixTimestamp = token_decode.payload.exp;
+      const milliseconds = unixTimestamp * 1000;
+      const dateObject = new Date(milliseconds);  
+      const humanDateFormat = dateObject.toLocaleString();
+      console.log(humanDateFormat); 
+      if(Date.now() <= dateObject){
+        console.log('fecha valida');
+        return 2;
+      }
+      else{
+        console.log('fecha invalida');
+        return 3;
+      }
+    }
+  }
+  else{
+    return 0;  //no se verifico
+  }
+}
+function verify(token) {
+  var verifyOptions = {
+      expiresIn:  "30d",
+      algorithm:  ["RS256"]
+  };
+   try{
+     return jwt.verify(token, publicKEY, verifyOptions);
+   }catch (err){
+     console.log(err);
+     return false;
+   }
+}
+function decode(token) {
+    return jwt.decode(token, {complete: true});
+    //returns null if token is invalid
+}
 module.exports = router;
+

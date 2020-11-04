@@ -1,15 +1,15 @@
 'user strict';
-
+var config =require('../config')
 const mysql = require('mysql');
 
 class Db {
     constructor() {
         this.connection = mysql.createConnection({
-            host: 'localhost',
-            user: 'root',
-            password: 'password',
-            database: 'user_service',
-            port: 3306
+            host: config.DATABASE_HOST,
+            user: config.DATABASE_USER,
+            password: config.DATABASE_PASSWORD,
+            database: config.DATABASE_NAME,
+            port: config.DATABASE_PORT
         });
         this.connection.connect(function(error){
             try{ 

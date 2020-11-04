@@ -21,8 +21,8 @@ router.get('/:cantidad', function(req, res, next) { // /tirar/3
     
     switch (validar(token, 'dados.tirar')){
       case 0: 
-      case 1: res.status(401).send({msg: 'token no valido'});  return; 
-      case 3: res.status(401).send({msg: 'token expirado'});  return; 
+      case 1: res.status(403).send({msg: 'token no valido'});  return; 
+      case 3: res.status(403).send({msg: 'token expirado'});  return; 
       case 2: break;
     }
     
@@ -108,8 +108,7 @@ function getToken(){
         if (res.statusCode==201){
           var cuerpo = JSON.parse(body.body)       
           console.log(token_acceso);  
-          var token_verify=verify(cuerpo);
-          var token_decode= decode(token_verify);
+          
           return 
         }
         else {
