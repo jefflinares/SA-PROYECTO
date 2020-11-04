@@ -295,7 +295,6 @@ router.put('/empezarTorneo', (req, res)=>{
                                 }
                             }
                             req.close();
-
                             //ya que se tienen los dos jugadores, se procederá a crear la partida.
                             //Para este punto ya se cuenta con el id de Torneo, Jugador1, Jugador2
                             //Pendiente: hacer función para obtener id de juego random
