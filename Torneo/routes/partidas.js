@@ -48,40 +48,112 @@ router.put('/', function (req, res) {
 });
 
 //servicio para crear nuevas partidas
-router.post('/', function (req, res){
+router.post('/crearPartida', function (req, res){
     var database = new db();
 
-    var objectPartida = {
+    var objetoPartida = {
         id : 0,
-        marcador : 0
-    };
+        uuid : "xxxxx-xxxxx-xxxxx",
+        jugador1: "emtpy",
+        jugador2: "empty",
+        ip_juego: "0.0.0.0",
+        estado: "no iniciado",
+        ganador: "ninguno",
+        idTorneo: "0",
+        fechaCreacion: "00-00-00", 
+        fechaJugado: "00-00-00"
+    }
 
     var partida = req.body;
     console.log(req.body);
 
-    var idPartida = partida.id;
-    var marcadorPartida = partida.marcador;
+    var uuidPartida = partida.uuid;
+    var jugador1Partida = partida.jugador1;
+    var jugador2Partida = partida.jugador2;
+    var ip_juegoPartida = partida.ip_juego;
+    var estadoPartida = partida.estado;
+    var ganadorPartida = partida.ganador;
+    var idtorneoPartida = partida.idTorneo;
+    var fechaCreacionPartida = partida.fechaCreacion;
+    var fechaJugadoPartida = partida.fechaJugado;
 
-    if(idPartida == undefined || marcadorPartida == undefined){
+
+    if(uuidPartida == undefined || jugador1Partida == undefined || jugador2Partida == undefined || ip_juegoPartida == undefined || estadoPartida == undefined || idtorneoPartida == undefined || jugador1Partida == undefined){
         console.log("Datos incorrectos de partida nueva");
         res.statusMessage = "Datos incorrectos de partida nueva";
         res.status(406).json(objectPartida);
     }else{
         //Codigo para guardar los datos de la nueva partida en la BD
         try{
-            var query = database.query('INSERT INTO PARTIDA(ID, MARCADOR) VALUES(?, ?)', [idPartida, marcadorPartida], function(error, result){
+            var query = database.query('INSERT INTO DBTORNEOS.PARTIDAS(UUID, JUGADOR1, JUGADOR2, IP_JUEGO, ESTADO, GANADOR, ID_TORNEO) VALUES(?,?,?,?,?,?,?)', [uuidPartida, jugador1Partida, jugador2Partida, ip_juegoPartida, estadoPartida, ganadorPartida, idtorneoPartida], function(error, result){
                 if(error){
                   console.log("Error al insertar partida nueva en DB ");
                   res.statusMessage="Datos Invalidos";
-                  res.status(406).json(objectPartida);
+                  res.status(406).json(objetoPartida);
                 }});
         }catch(x){
             console.log("Error en insersión de partida nueva: "+x);
             res.statusMessage="Datos Invalidos";
-            res.status(406).json(objectPartida);
+            res.status(406).json(objetoPartida);
             return;
         }
+
+        var sql = 'SELECT * FROM BDTORNEOS.PARTIDAS WHERE UUID=\''+uuidPartida+'\'';
+        database.query(sql)
+            .then(rows => {
+                var num = rows[0].ID;
+                console.log("[PARTIDA]:Partida creada exitosamente");
+                console.log(rows);
+                database.close();
+
+                objetoPartida.id = num;
+                objetoPartida.uuid = uuidPartida;
+                objetoPartida.jugador1 = jugador1Partida;
+                objetoPartida.jugador2 = jugador2Partida;
+                objetoPartida.ip_juego = ip_juegoPartida;
+                objetoPartida.estado = estadoPartida;
+                objetoPartida.ganador = ganadorPartida;
+                objetoPartida.idTorneo = idtorneoPartida;
+                objetoPartida.fechaCreacion = fechaCreacionPartida;
+                objetoPartida.fechaJugado = fechaJugadoPartida;
+
+                console.log('[PARTIDA]:Status:201');
+                console.log(objetoPartida);
+                //req.body.mensaje = "Exito";
+                res.status(201).json(objetoPartida);  
+            }, err => {
+                console.log("esta mostrando el error de intentar consultar el id de juego");
+                return database.close().then(() => {
+                    throw err;
+                })
+            })
     }
+});
+
+
+router.get('/getUuid', (req, res) => {
+    console.log('entro al servicio uuid');
+    var respuesta = {
+        id: 0,
+        uuid: 'xxxxx-xxxxx-xxxxx'
+    }
+    try{
+            console.log('entro al try');
+            var uuid1 = crear_uuid();
+            console.log('ya asignó el uuid');
+            
+            respuesta.uuid = uuid1;
+            res.statusMessage = 'UUID Generado';
+            console.log("[PARTIDA]: Se generó el uuid de la partida");
+            res.send(respuesta.uuid);
+
+
+    }catch(x){
+        console.log('entro en la exception');
+            res.statusMessage = 'No entro a la creación de uuid';
+            res.status(406).json(respuesta);
+    }
+    
 });
 
 

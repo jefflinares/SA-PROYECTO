@@ -194,6 +194,71 @@ router.get('/listar', (req, res) => {
     }
 });
 
+//función para traer la ip de un juego especifico por ID
+router.get('/getJuego', (req, res)=>{
+    var id = req.query.ID;
+    const regex = /^[0-9]*$/;
+    const verificacion = regex.text(id);
+    console.log('[JUEGOS]:Se solicita la IP del juego con ID:'+id);
+    var objetoJuego = {
+        id:0,
+        Nombre: "example",
+        IP: "0.0.0.0"
+    }
+
+    if(verificacion == false){
+        console.log('[JUEGO]:Id de juego no válido');
+        res.statusMessage = "Id de juego no válido";
+        res.status(404).json(objetoJuego);
+    }else{
+        var idJuego = Number(id);
+        //aqui se debe hacer una búsqueda de los datos del juego en base de datos.
+        var database = new db();
+        var sql = 'SELECT * FROM DBTORNEOS.JUEGOS WHERE ID =' + id;
+        database.query(sql)
+            .then(rows => {
+                objetoJuego.id = Number(rows[0].ID);
+                objetoJuego.Nombre = rows[0].NOMBRE;
+                objetoJuego.IP = rows[0].IP;
+                console.log("Status 201");
+                req.status(201).text(objetoJuego.IP);
+                res.send(objetoJuego.IP);
+
+            }, err => {
+                return database.close().then(() => {
+                    throw err;
+                })
+            })
+    }
+});
+
+//función para traer el total de juegos registrados
+router.get('/getTotalJuegos', (req, res)=>{
+    console.log('[JUEGOS]:Se solicita el total de juegos');
+    var totalJuegos = 0;
+    try{
+        //aqui se debe hacer una búsqueda de los datos del juego en base de datos.
+        var database = new db();
+        var sql = 'SELECT COUNT(*) AS TOTAL FROM DBTORNEOS.JUEGOS';
+        database.query(sql)
+            .then(rows => {
+                totalJuegos = rows[0].TOTAL;
+                console.log("[JUEGOS]:Status 201");
+                console.log("[JUEGOS]:Total de juegos: "+totalJuegos);
+                res.send(totalJuegos);
+
+            }, err => {
+                return database.close().then(() => {
+                    throw err;
+                })
+            })
+    }catch(x){
+        console.log('[JUEGOS]:Error al intentar consultar el total de juegos');
+        console.log(x);
+        res.send(totalJuegos);
+    }
+});
+
 router.get('/uuid', (any, res) => {
     console.log('entro al servicio uuid');
     var respuesta = {

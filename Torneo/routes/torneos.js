@@ -191,6 +191,19 @@ router.put('/empezarTorneo', (req, res)=>{
         FECHA: "00-00-00"
     }
 
+    var objetoPartida = {
+        id : 0,
+        uuid : "xxxxx-xxxxx-xxxxx",
+        jugador1: "emtpy",
+        jugador2: "empty",
+        ip_juego: "0.0.0.0",
+        estado: "no iniciado",
+        ganador: "ninguno",
+        idTorneo: "0",
+        fechaCreacion: "00-00-00", 
+        fechaJugado: "00-00-00"
+    }
+
     var id = req.query.id;
     console.log(id);
     const regex = /^[0-9]*$/;
@@ -267,8 +280,7 @@ router.put('/empezarTorneo', (req, res)=>{
                                         console.log("jugador1: " + jugador1);
                                     }catch(err){
                                         console.log(err);
-                                    }
-                                    
+                                    } 
                                 }
                             }
                             req.close();
@@ -298,7 +310,108 @@ router.put('/empezarTorneo', (req, res)=>{
                             //ya que se tienen los dos jugadores, se procederá a crear la partida.
                             //Para este punto ya se cuenta con el id de Torneo, Jugador1, Jugador2
                             //Pendiente: hacer función para obtener id de juego random
+                            var urlTotalJuegos = "http://"+config.USERS_SERVICE_HOST + ":" + config.USERS_SERVICE_PORT + "/getTotalJuegos";
+                            var urlIpJuego = "http://"+config.USERS_SERVICE_HOST + ":" + config.USERS_SERVICE_PORT + "/getJuego/";
+                            var totalJugadoresTorneo;
+                            var idJuegoTorneo;
+                            var IpJuegoTorneo;
+
+                            //se obtiene el total de juegos para seleccionar un juego al azar
+                            req.open("GET",urlTotalJuegos);
+                            req.onreadystatechange = function() {
+                                    //req.responseText;
+                                try{
+                                    totalJugadoresTorneo = req.responseText;
+                                    console.log("[JUEGOS]:Total de juegos registrados: " + totalJugadoresTorneo);
+                                }catch(err){
+                                    console.log(err);
+                                } 
+                            }
+                            req.close();
+                            //Se verifica si el total de torneos es mayor a cero para elegir un id de juego.
+                            if (totalJugadoresTorneo > 0){
+                                idJuegoTorneo = juegoRandom(totalJugadoresTorneo);
+                            }else{
+                                idJuegoTorneo = 0;
+                            }
+                            
+                            //Se consume el servicio para traer la IP de un juego especifico
+                            req.open("GET",urlIpJuego);
+                            req.onreadystatechange = function() {
+                                    //req.responseText;
+                                try{
+                                    IpJuegoTorneo = req.responseText
+                                    console.log("[JUEGOS]:IP del juego seleccionado para la partida: " + IpJuegoTorneo);
+                                }catch(err){
+                                    console.log(err);
+                                } 
+                            }
+                            req.close();
+
+                            if(IpJuegoTorneo == undefined){
+                                IpJuegoTorneo = "0.0.0.0";
+                            }
+
+                            //para este punto ya tenemos: 
+                            // -> ID Jugador1
+                            // -> ID Jugador2
+                            // -> ID de Torneo
+                            // -> IP del juego 
+
+                            //Ahora se procede a generar la partida del torneo 
+                            //Primero se debe obtener un uuid para la partida a crear
+                            var urlUuid = "http://"+config.USERS_SERVICE_HOST + ":" + config.USERS_SERVICE_PORT + "/getUuid";
+                            var uuidPartida; 
+                            req.open("GET",urlUuid);
+                            req.onreadystatechange = function() {
+                                    //req.responseText;
+                                try{
+                                    uuidPartida = req.responseText
+                                    console.log("[PARTIDA]:UUID => "+uuidPartida);
+                                    console.log("[PARTIDA]:Se generó el uuid de la partida exitosamente");
+                                }catch(err){
+                                    console.log(err);
+                                } 
+                            }
+                            req.close();
+
+                            if(uuidPartida == undefined){
+                                uuidPartida = "xxxxx-xxxxx-xxxxx";
+                            }
+
+                            //se prepara el JSON que se enviará al servicio de partidas
+                            objetoPartida.uuid = uuidPartida;
+                            objetoPartida.jugador1 = jugador1.ID;
+                            objetoPartida.jugador2 = jugador2.ID;
+                            objetoPartida.ip_juego = IpJuegoTorneo;
+                            objetoPartida.estado = "Creada";
+                            objetoPartida.ganador = "empty";
+                            objetoPartida.idTorneo = idTorneoEmpezado;
+                            
+                            var respuesta;
+                            var urlCrearPartida = "http://"+config.USERS_SERVICE_HOST + ":" + config.USERS_SERVICE_PORT + "/crearPartida";
+                            req.open("POST", urlCrearPartida);
+                            let jsonDataPartida = JSON.stringify(objetoPartida);
+                            req.onreadystatechange = function() {
+                                if(req.readyState == 4 && req.status == 201) { 
+                                    //req.responseText;
+                                    try{
+                                        respuesta = JSON.parse(req.responseText);
+                                        console.log("respuesta: " + respuesta.id);
+                                    }catch(err){
+                                        console.log(err);
+                                    }
+                                    return;
+                                }
+                            }
+                            //Se envia el json con los datos de la partida a crear y se asigna la respuesta al objeto partida.
+                            objetoPartida = req.send(jsonDataPartida);
+                            console.log("[PARTIDA]:Partida creada exitosamente con la siguiente información: ");
+                            console.log(objetoPartida);
                         }
+
+                        //Aqui se realizarà la lògica de jugar la partida y obtener al ganador.
+                        
                         //se recalcula la cantidad de llaves
                         cantidadLlaves = Number(cantidadLlaves)/2;
                     }
@@ -360,12 +473,21 @@ router.get('/test', (req, res) => {
     return pagina;
 }
 
+//devuelve el id de un jugador random
 function jugadorRandom(total){
     var t = Number(total);
     var aleatorio = Math.round(Math.random()*t);
     return aleatorio;
 }
 
+//Devuelve el id de un juego random
+function juegoRandom(total){
+    var t = Number(total);
+    var aleatorio = Math.round(Math.random()*t);
+    return aleatorio;
+}
+
+//calcula el total de rondas en base a la cantidad de jugadores
 function totalRondas(totalUsuarios){
     var rondas = 0;
     var llaves = 0;
