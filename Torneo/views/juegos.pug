@@ -3,25 +3,32 @@ extends layout
 block content
     div(class="jumbotron" style="padding:40px;")
         h1  #{title}
-        p En esta sección podrá gestionar todos los juegos.
+        p En esta sección podrá ingresar los juegos disponibles.
 
     .row
       .col-md-4
-        h2 Contenido
+        
+        h2 Registrar Juego
         p
-          | Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
-        p
-          a.btn.btn-secondary(href='#' role='button') Ver más &raquo;
+          form(action="http://localhost:3000/juegos/registrar", method="POST")
+            label(for="Nombre") Nombre de Juego: 
+            br
+            input(type="text", name="Nombre")
+            br
+          
+            label(for="IP") IP:
+            br
+            input(type="text", name="IP")
+            br
+            span(name="mensaje")
+            br 
+            button(type="submit") Registrar
+
+            br
       .col-md-4
-        h2 Contenido
+        h2 Listar Juegos
         p
-          | Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
-        p
-          a.btn.btn-secondary(href='#' role='button') Ver más &raquo;
-      .col-md-4
-        h2 Contenido
-        p
-          | Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
-        p
-          a.btn.btn-secondary(href='#' role='button') Ver más &raquo;
+          form(action="http://localhost:3000/juegos/listar", method="GET")
+
+            button(type="submit") Listar Juegos
     hr

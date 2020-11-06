@@ -1,0 +1,18 @@
+extends layout
+
+block content
+    div(class="jumbotron" style="padding:40px;")
+        h1  #{title}
+        p Esta sección es para la gestión de las partidas.
+    
+    .row
+      .col-md-4
+        h2 Visualizar Partidas
+        p
+          | Detalle de las partidas creadas para cada torneo
+
+        form(action="http://localhost:3000/partidas/listarPartidas", method="GET")
+          label(for="Nombre") Nombre de Torneo: 
+          br
+          button(type="submit") Crear
+          hr
