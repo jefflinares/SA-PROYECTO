@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const path = require('path');
 var db = require('./db.js');
+const config = require('../config');
 
 router.put('/', function (req, res) {
     var id = req.query.id;
@@ -60,6 +61,7 @@ router.post('/crearPartida', function (req, res){
         estado: "no iniciado",
         ganador: "ninguno",
         idTorneo: "0",
+        ronda: 0,
         fechaCreacion: "00-00-00", 
         fechaJugado: "00-00-00"
     }
@@ -74,18 +76,19 @@ router.post('/crearPartida', function (req, res){
     var estadoPartida = partida.estado;
     var ganadorPartida = partida.ganador;
     var idtorneoPartida = partida.idTorneo;
+    var rondaPartida = partida.ronda;
     var fechaCreacionPartida = partida.fechaCreacion;
     var fechaJugadoPartida = partida.fechaJugado;
 
 
-    if(uuidPartida == undefined || jugador1Partida == undefined || jugador2Partida == undefined || ip_juegoPartida == undefined || estadoPartida == undefined || idtorneoPartida == undefined || jugador1Partida == undefined){
+    if(uuidPartida == undefined || jugador1Partida == undefined || jugador2Partida == undefined || ip_juegoPartida == undefined || estadoPartida == undefined || idtorneoPartida == undefined || jugador1Partida == undefined || rondaPartida == undefined){
         console.log("Datos incorrectos de partida nueva");
         res.statusMessage = "Datos incorrectos de partida nueva";
         res.status(406).json(objectPartida);
     }else{
         //Codigo para guardar los datos de la nueva partida en la BD
         try{
-            var query = database.query('INSERT INTO DBTORNEOS.PARTIDAS(UUID, JUGADOR1, JUGADOR2, IP_JUEGO, ESTADO, GANADOR, ID_TORNEO) VALUES(?,?,?,?,?,?,?)', [uuidPartida, jugador1Partida, jugador2Partida, ip_juegoPartida, estadoPartida, ganadorPartida, idtorneoPartida], function(error, result){
+            var query = database.query('INSERT INTO DBTORNEOS.PARTIDAS(UUID, JUGADOR1, JUGADOR2, IP_JUEGO, ESTADO, GANADOR, ID_TORNEO, RONDA) VALUES(?,?,?,?,?,?,?, ?)', [uuidPartida, jugador1Partida, jugador2Partida, ip_juegoPartida, estadoPartida, ganadorPartida, idtorneoPartida, rondaPartida], function(error, result){
                 if(error){
                   console.log("Error al insertar partida nueva en DB ");
                   res.statusMessage="Datos Invalidos";
@@ -114,6 +117,7 @@ router.post('/crearPartida', function (req, res){
                 objetoPartida.estado = estadoPartida;
                 objetoPartida.ganador = ganadorPartida;
                 objetoPartida.idTorneo = idtorneoPartida;
+                objetoPartida.ronda = rondaPartida;
                 objetoPartida.fechaCreacion = fechaCreacionPartida;
                 objetoPartida.fechaJugado = fechaJugadoPartida;
 
@@ -156,6 +160,89 @@ router.get('/getUuid', (req, res) => {
     
 });
 
+router.get('/validarJugadorPartida', (req, res)=>{
+    var database = new db();
+
+    var objetoValidar = {
+        jugador1: 0,
+        ronda: 0,
+        valido: false
+    }
+
+    var partida = req.body;
+    console.log(req.body);
+
+    var jugador1Partida = partida.id; 
+    var rondaPartida = partida.ronda;
+    var validoPartida = false;
+
+
+    if(jugador1Partida == undefined || rondaPartida == undefined){
+        console.log("Datos incorrectos de partida nueva");
+        res.statusMessage = "Datos incorrectos de validación de juegador para nueva partida";
+        res.status(406).json(objetoValidar);
+    }else{
+        var sql = 'SELECT * FROM BDTORNEOS.PARTIDAS WHERE RONDA=\''+rondaPartida+'\' AND JUGADOR1='+jugador1Partida+' OR JUGADOR2'+jugador1Partida;
+        database.query(sql)
+            .then(rows => {
+                
+                console.log("[PARTIDA]:Consulta jugador asignado a partida");
+                console.log(rows);
+                database.close();
+
+                objetoValidar.jugador1 = jugador1Partida;
+                objetoValidar.ronda = rondaPartida;
+                objetoValidar.valido = false;
+                console.log('[PARTIDA]:Status:201');
+                console.log(objetoValidar);
+
+                if(objetoValidar.jugador1 != 0){
+                    //indicar que jugador ya aparece asignado en una partida
+                    res.send(false);
+                }else{
+                    //indica que el jugador no se encontró por lo tanto es válido para ser asignado.
+                    res.send(true);
+                }
+            
+            }, err => {
+                console.log("esta mostrando el error de intentar consultar el id de juego");
+                return database.close().then(() => {
+                    throw err;
+                })
+            })
+    }
+});
+
+router.get('/obtenerPartidas', (req, res)=>{
+    var partida = req.body;
+
+    var idRonda = partida.ronda;
+    var idTorneo = partida.idTorneo;
+
+    if(idRonda == undefined){
+        console.log("Datos incorrectos de partida registrada");
+        res.statusMessage = "Datos incorrectos de validación de juegador para nueva partida";
+        res.send("Datos Incorrectos");
+    }else{
+        var sql = 'SELECT * FROM BDTORNEOS.PARTIDAS WHERE RONDA=\''+idRonda + ' AND ID_TORNEO='+idTorneo;
+        database.query(sql)
+            .then(rows => {
+                
+                console.log("[PARTIDA]:Consulta jugador asignado a partida");
+                console.log(rows);
+                database.close();
+
+                console.log('[PARTIDA]:Status:201');
+                console.log(objetoValidar);
+                res.status(201).json(rows);
+            }, err => {
+                console.log("esta mostrando el error de intentar consultar el id de juego");
+                return database.close().then(() => {
+                    throw err;
+                })
+            })
+    }
+});
 
 router.get('/obtenerJuegos', (req, res) => {
     var id = req.query.id;
@@ -198,6 +285,97 @@ router.get('/obtenerJuegos', (req, res) => {
     }
 });
 
+router.get('/listarPartidas', (req, res)=>{
+
+    var database = new db();
+        var sql = 'SELECT * FROM BDTORNEOS.PARTIDAS';
+        database.query(sql)
+            .then(rows => {
+                database.close();
+
+                var i = 0;
+                var ID = "";
+                var UUID = "";
+                var JUGADOR1 = "";
+                var JUGADOR2 = '';
+                var IP_JUEGO = '';
+                var ESTADO = '';
+                var GANADOR = '';
+                var ID_TORNEO = '';
+                var RONDA = '';
+                var FECHA_CREACION = '';
+                var FECHA_JUGADO = '';
+                var tabla = "";
+                var pagina;
+                if (rows[0]!=null){
+                    //se crean los encabezados de la tabla
+                    tabla = "<table border=1>"+
+                            "<tr>"+
+                                "<th>ID</th>"+
+                                "<th>UUID</th>"+
+                                "<th>JUGADOR1</th>"+
+                                "<th>JUGADOR2</th>"+
+                                "<th>IP</th>"+
+                                "<th>ESTADO</th>"+
+                                "<th>GANADOR</th>"+
+                                "<th>ID_TORNEO</th>"+
+                                "<th>RONDA</th>"+
+                                "<th>FECHA_CREACION</th>"+
+                                "<th>FECHA_JUGADO</th>"+
+                            "</tr>";
+                    for(i = 0; i< rows.length; i++){
+                        console.log("For i: "+i);
+                        tabla +=    "<tr>"+
+                                        "<td>"+rows[i].ID+"</td>"+
+                                        "<td>"+rows[i].UUID+"</td>"+
+                                        "<td>"+rows[i].JUGADOR1+"</td>"+
+                                        "<td>"+rows[i].JUGADOR2+"</td>"+
+                                        "<td>"+rows[i].IP_JUEGO+"</td>"+
+                                        "<td>"+rows[i].ESTADO+"</td>"+
+                                        "<td>"+rows[i].GANADOR+"</td>"+
+                                        "<td>"+rows[i].ID_TORNEO+"</td>"+
+                                        "<td>"+rows[i].RONDA+"</td>"+
+                                        "<td>"+rows[i].FECHA_CREACION+"</td>"+
+                                        "<td>"+rows[i].FECHA_JUGADO+"</td>"+
+                                    "</tr>";
+                    }
+                    tabla += "</table>";
+                    //console.log(tabla);
+                    console.log("-------------------");
+                    console.log("Status 201");
+
+                    pagina = retornaPagina(tabla);
+                    //res.send(tabla);
+                    res.send(pagina);
+                }else{
+                    console.log("[PARTIDAS]:No se encontraron registros de partidas creadas en BD.");
+                    tabla = "<table border=1>"+
+                            "<tr>"+
+                                "<th>ID</th>"+
+                                "<th>UUID</th>"+
+                                "<th>JUGADOR1</th>"+
+                                "<th>JUGADOR2</th>"+
+                                "<th>IP</th>"+
+                                "<th>ESTADO</th>"+
+                                "<th>GANADOR</th>"+
+                                "<th>ID_TORNEO</th>"+
+                                "<th>RONDA</th>"+
+                                "<th>FECHA_CREACION</th>"+
+                                "<th>FECHA_JUGADO</th>"+
+                            "</tr>"+
+                            "</table>"+
+                            "<span>No hay registros de partidas creadas</span>"
+                            ;
+                    pagina = retornaPagina(tabla);
+                    res.send(pagina);
+                }
+            }, err => {
+                return database.close().then(() => {
+                    throw err;
+                })
+            })
+});
+
 //funcion para generar el uuid para la partida
 function crear_uuid(){
     var dt = new Date().getTime();
@@ -207,6 +385,47 @@ function crear_uuid(){
         return (c=='x' ? r :(r&0x3|0x8)).toString(16);
     });
     return uuid;
+}
+
+function retornaPagina(tabla){
+    var pagina = "";
+    pagina += "<!DOCTYPE html>";
+    pagina += "<html lang='en'>";
+    pagina += "<head>";
+    pagina += "<meta charset='UTF-8'>";
+    pagina += "<meta name='viewport' content='width=device-width, initial-scale=1.0'>";
+    pagina += "<meta http-equiv='X-UA-Compatible' content='ie=edge'>";
+    pagina += "<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js'></script>";
+    pagina += "<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css'>";
+    pagina += "<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css'>";
+    pagina += "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js'></script>";
+    pagina += "</head>";
+    pagina += "<body>";
+    pagina += "<div style='margin:100px;'>";
+    pagina += "<nav class='navbar navbar-inverse navbar-static-top'>";
+    pagina += "<div class='container'>";
+    pagina += "<a class='navbar-brand' href='http://"+ config.HOST +":"+ config.PORT+"/'>MS TORNEOS</a>";
+    pagina += "<ul class='nav navbar-nav'>";
+    pagina += "<li class='active'>";
+    pagina += "<a href='http://"+ config.HOST +":"+ config.PORT+"/partidas'>Partidas</a>";
+    pagina += "</li>";
+    pagina += "</ul>";
+    pagina += "</div>";
+    pagina += "</nav>";
+    pagina += "<div class='jumbotron'  style='padding:40px;'>";
+    pagina += "<h1>Gestor de Torneos</h1>";
+    pagina += "<p>Enhorabuena. A continuación se muestra un listado de los partidas disponibles: </p>";
+    pagina += tabla;
+    pagina += "<p><a class='btn btn-primary btn-lg' href='http://"+config.HOST+":"+config.PORT+"/partidas' role='button'>Volver</a></p>";
+    pagina += "</div>";
+    pagina += "</div>";
+    pagina += "</body>";
+    pagina += "</html>";
+    console.log('.....................................................................');
+    //console.log(pagina);
+    console.log('.....................................................................');
+    console.log('');
+    return pagina;
 }
 
 

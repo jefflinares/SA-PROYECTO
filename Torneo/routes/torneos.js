@@ -180,6 +180,7 @@ router.get('/listarTorneos', (req, res)=>{
 
 //servicio para empezar la simulación de un nuevo torneo
 router.put('/empezarTorneo', (req, res)=>{
+    var jugadoresAsignados = [];
     var respuesta = {
         Torneo: 0,
         ID_Jugador:0,
@@ -200,8 +201,19 @@ router.put('/empezarTorneo', (req, res)=>{
         estado: "no iniciado",
         ganador: "ninguno",
         idTorneo: "0",
+        ronda: 0,
         fechaCreacion: "00-00-00", 
         fechaJugado: "00-00-00"
+    }
+
+    var objetoJugadoresPartida = {
+        j1:0,
+        j2:0
+    }
+
+    var objetoJuegoServicio = {
+        id: "000000-00000-000000",
+        jugadores: jugadoresPartida,
     }
 
     var id = req.query.id;
@@ -266,10 +278,15 @@ router.put('/empezarTorneo', (req, res)=>{
                     var jugador1;
                     var idJugador2;
                     var jugador2;
+                    
+                    //Ciclo para contar las distintas rondas del torneo
                     for(i=0; i<cantidadRondas-1; i++){
+
+                        //ciclo para recorrer y crear las llaves correspondientes a la misma ronda.
                         for(j=0; j<cantidadLlaves; j++){
                             //se solicita al jugador 1 llamando un random
                             idJugador1 = jugadorRandom(totalUsuarios);
+                             var jugadorValido;
                             //se consume el servicio de usuarios para traer la informaciòn del jugador1
                             req.open("GET",urlJugador+idJugador1);
                             req.onreadystatechange = function() {
@@ -387,6 +404,8 @@ router.put('/empezarTorneo', (req, res)=>{
                             objetoPartida.estado = "Creada";
                             objetoPartida.ganador = "empty";
                             objetoPartida.idTorneo = idTorneoEmpezado;
+                            objetoPartida.ronda = i;
+
                             
                             var respuesta;
                             var urlCrearPartida = "http://"+config.USERS_SERVICE_HOST + ":" + config.USERS_SERVICE_PORT + "/crearPartida";
@@ -408,10 +427,61 @@ router.put('/empezarTorneo', (req, res)=>{
                             objetoPartida = req.send(jsonDataPartida);
                             console.log("[PARTIDA]:Partida creada exitosamente con la siguiente información: ");
                             console.log(objetoPartida);
+                            req.close();
                         }
 
                         //Aqui se realizarà la lògica de jugar la partida y obtener al ganador.
-                        
+                        var urlTotalJuegos = "http://"+config.USERS_SERVICE_HOST + ":" + config.USERS_SERVICE_PORT + "/obtenerPartidas";
+                        var listadoPartidas;
+                        //se manda a traer el listado de partidas para una ronda especìfica
+                        req.open("GET",urlTotalJuegos+'?ronda='+i+'&torneo='+idTorneoEmpezado);
+                        req.onreadystatechange = function() {
+                            if(req.readyState == 4 && req.status == 200) { 
+                                //req.responseText;
+                                try{
+                                    listadoPartidas = JSON.parse(req.responseText);
+                                    console.log("Listado Partidas: " + listadoPartidas);
+                                }catch(err){
+                                    console.log(err);
+                                }
+                                
+                            }
+                        }
+                        req.close();
+
+                        //se recorrerá el json de partidas creadas
+                        for(x of listadoPartidas){
+                            //Aqui adentro se mandará a consumir el servicio de juegos
+                            var urlSimularPartida = "http://"+config.JUEGOS_SERVICE_HOST + ":" + config.JUEGOS_SERVICE_PORT + "/simular";
+
+                            objetoJuegoServicio.id = x.uuid;
+                            objetoJugadoresPartida.j1 = x.jugador1;
+                            objetoJugadoresPartida.j2 = x.jugador2;
+                            objetoJuegoServicio.jugadores = objetoJugadoresPartida;
+
+
+                            req.open("POST", urlSimularPartida);
+                            let jsonSimulacionPartida = JSON.stringify(objetoJuegoServicio);
+                            var respuesta;
+                            req.onreadystatechange = function() {
+                                if(req.readyState == 4 && req.status == 201) { 
+                                    //req.responseText;
+                                    try{
+                                        respuesta = JSON.parse(req.responseText);
+                                        console.log("respuesta: " + respuesta.id);
+                                    }catch(err){
+                                        console.log(err);
+                                    }
+                                    return;
+                                }
+                            }
+                            //Se envia el json con los datos de la partida a crear y se asigna la respuesta al objeto partida.
+                            objetoJuegoServicio = req.send(jsonSimulacionPartida);
+                            console.log("[PARTIDA]:Partida simulada exitosamente con la siguiente información: ");
+                            console.log(objetoPartida);
+                            req.close();
+                        }
+
                         //se recalcula la cantidad de llaves
                         cantidadLlaves = Number(cantidadLlaves)/2;
                     }

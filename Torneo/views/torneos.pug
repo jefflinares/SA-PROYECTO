@@ -30,7 +30,9 @@ block content
         h2 Iniciar Torneo
         p
           | Ingrese el ID del torneo que desea iniciar:
-        hr
+
+        form(action="http://localhost:3000/torneos/empezarTorneo", method="GET")
+
           label(for="id") ID de Torneo: 
           br
           input(type="text", name="id")
