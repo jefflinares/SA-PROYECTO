@@ -6,12 +6,20 @@ const fs   = require('fs');
 const { Console } = require('console');
 var publicKEY  = fs.readFileSync('./keys/public.key', 'utf8');  
 
+
 /* GET tirar dados listing. */
 router.get('/:cantidad', function(req, res, next) { // /tirar/3
   try{
 
+    fs.appendFile('./Logs/logs.txt','\nMS-DADOS-TIRAR(GET) '+ getDate(), function(err) {
+      if(err) return console.error(err);
+    });
+
     var token = req.headers['authorization']     
-    if(!token){         
+    if(!token){    
+        fs.appendFile('./Logs/logs.txt',' status 401', function(err) {
+          if(err) return console.error(err);
+        });     
         res.status(401).send({           
         error: "Es necesario el token de autenticación"         })         
         return     
@@ -29,10 +37,17 @@ router.get('/:cantidad', function(req, res, next) { // /tirar/3
     var cantidad= req.params.cantidad;
     var dados=0;
 
+    fs.appendFile('./Logs/logs.txt',' /tirar/{'+cantidad+'}', function(err) {
+      if(err) return console.error(err);
+    });
+
     const regex = /^[0-9]*$/;
     const verificacion = regex.test(cantidad);
   
     if(verificacion==false){ //Si no viene un numero en el parametro, error
+      fs.appendFile('./Logs/logs.txt',' status 400', function(err) {
+        if(err) return console.error(err);
+      }); 
       res.statusMessage="Número de dados a tirar no es válido"
       res.status(400).json({dados:[0]});
       return;
@@ -49,12 +64,18 @@ router.get('/:cantidad', function(req, res, next) { // /tirar/3
       const element = generateRandom(1,7);
       objectRes.dados.push(element); //Se guarda el numero generado aleatorimente
     }
+    fs.appendFile('./Logs/logs.txt',' status 200', function(err) {
+      if(err) return console.error(err);
+    });
     res.statusMessage="Tiro Exitoso";
     res.status(200).json(objectRes);
     
   }
   catch(x){
     console.log(x);
+    fs.appendFile('./Logs/logs.txt',' status 400', function(err) {
+      if(err) return console.error(err);
+    });
     res.statusMessage="Número de dados a tirar no es válido"
     res.status(400).json({dados:[0]});
   }
@@ -137,4 +158,18 @@ function decode(token) {
     return jwt.decode(token, {complete: true});
     //returns null if token is invalid
 }
+function getDate(){
+  let ts = Date.now();
+  let date_ob = new Date(ts);
+  let date = date_ob.getDate();
+  let month = date_ob.getMonth() + 1;
+  let year = date_ob.getFullYear();
+  let hours = date_ob.getHours();
+  let minutes = date_ob.getMinutes();
+  let seconds = date_ob.getSeconds();
+
+  let fulldate=year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds;
+  return fulldate
+}
+
 module.exports = router;
