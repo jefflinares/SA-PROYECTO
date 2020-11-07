@@ -146,7 +146,7 @@ router.post('/generar', async function(req, res, next) {
   switch (lib.validar(token, 'juegos.generar')){
     case 0: 
     case 1: res.status(403).send({msg: 'token no valido'}); 
-            lib.appendToLog(peticion + " Status 403") return; 
+            lib.appendToLog(peticion + " Status 403"); return; 
     case 3: res.status(403).send({msg: 'token expirado'});  return; 
     case 2: break;
   }
