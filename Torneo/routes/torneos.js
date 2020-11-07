@@ -102,6 +102,7 @@ router.post('/crear', function (req, res){
                 objetoTorneo.Nombre = Nombre;
                 objetoTorneo.Fecha = fecha;
                 archivo += "\n[TORNEOS]:STATUS 201 | " + now.toLocaleTimeString();
+                escribirLog();
                 res.status(201).json(objetoTorneo);
 
             }, err => {
@@ -109,6 +110,7 @@ router.post('/crear', function (req, res){
                     throw err;
                 })
             })
+            escribirLog();
             // .catch(err => {
             //     console.log(err);
             //     res.statusMessage = "Datos no correctos.";
@@ -173,6 +175,7 @@ router.get('/listarTorneos', (req, res)=>{
                     archivo += "\n[TORNEOS]:STATUS 201 | " + now.toLocaleTimeString();
                     console.log("Status 201");
                     var pagina = retornaPagina(tabla);
+                    escribirLog();
                     //res.send(tabla);
                     res.send(pagina);
                 }
@@ -185,6 +188,7 @@ router.get('/listarTorneos', (req, res)=>{
                     throw err;
                 })
             })
+            escribirLog();
 });
 
 //servicio para empezar la simulación de un nuevo torneo
@@ -529,13 +533,16 @@ router.put('/empezarTorneo', (req, res)=>{
 
                         archivo += "\n[TORNEOS]:Se avanza de ronda | " + now.toLocaleTimeString();
                     }
+                    escribirLog();
                 }else{
                     console.log('No  hay suficientes usuarios para crear un torneo');
                     archivo += "\n[TORNEOS]:ERROR no hay suficientes usuarios para crear las partidas. | " + now.toLocaleTimeString();
                 }
+                
             }
         }
     }
+    escribirLog();
 
 });
 
@@ -616,12 +623,15 @@ function totalRondas(totalUsuarios){
             return rondas;
         }
     }
+
     return rondas;
 }
 
-let actual = fs.readFileSync("torneosLog.txt").toString();
-console.log("actual: "+actual);
-fs.writeFileSync("torneosLog.txt", actual+archivo, "");
+function escribirLog(){
+    let actual = fs.readFileSync("torneosLog.txt").toString();
+    console.log("actual: "+actual);
+    fs.writeFileSync("torneosLog.txt", actual+archivo, "");
+}
 
 module.exports = router;
 

@@ -1,8 +1,14 @@
-version: '3'
-services: 
-    nodejs:  
-        build: .  
-        volumes:    
-            - "./ms_dado:/src/"  
-        ports:    
-            - "3000:3000"
+# version: '3'
+# services: 
+#     nodejs:  
+#         build: .  
+#         volumes:    
+#             - "./ms_dado:/src/"  
+#         ports:    
+#             - "3000:3000"
+torneo:
+    build: .
+    volumes:
+        - "./torneo:/src"
+    ports:
+        - "3000:3000"

@@ -74,13 +74,12 @@ function getToken(){
   contenido = "\n[MS]:Solicitando token de usuario administrador | "+ now.toLocaleTimeString();
   console.log(contenido);
   var access_token;
-  var url = "http://" + config.JWT_SERVICE_HOST + ":" + config.JWT_SERVICE_PORT + "/token";
-  console.log(url);
+  var url = "http://" + config.JWT_SERVICE_HOST + ":" + config.JWT_SERVICE_PORT + "/token"+"?id="+config.TORNEOS_SERVICE_ID+"&secret="+config.TORNEOS_SERVICE_SECRET;
+  console.log("URL Completa:"+url);
     var req = new XMLHttpRequest();
     req.open("POST",url);
     //req.setRequestHeader('Authorization', 'Bearer ' + access_token);
-    req.setRequestHeader('Content-Type', 'application/json',true);
-    console.log("access: "+access_token)
+    //req.setRequestHeader('Content-Type', 'application/json',true);
     var text = JSON.stringify({"id":config.TORNEOS_SERVICE_ID, "secret":config.TORNEOS_SERVICE_SECRET});
     var respuesta;
     
@@ -105,8 +104,6 @@ function getToken(){
           console.log(respuesta.jwt);
         }  
     }
-    console.log(text);
-    req.send(text);
 }
 
 //archivoLog.end();
@@ -114,7 +111,6 @@ console.log(contenido);
 console.log("[MS]:LOG ACTUALIZADO");
 
 let actual = fs.readFileSync("torneosLog.txt").toString();
-console.log("actual: "+actual);
 fs.writeFileSync("torneosLog.txt", actual+contenido, "");
 
 module.exports = {app, token};

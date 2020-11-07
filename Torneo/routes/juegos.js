@@ -45,6 +45,7 @@ router.get('/', (req, res) => {
                 
             });
     }
+    escribirLog();
 });
 
 router.post('/registrar', function (req, res){
@@ -59,7 +60,7 @@ router.post('/registrar', function (req, res){
     var juego = req.body;
     console.log(req.body);
     archivo += "\n[JUEGOS]:Estructura de body en POST: | " + now.toLocaleTimeString();
-    archivo += "\n"+ req.body;
+    archivo += "\n"+ JSON.toString(req.body).toString();
 
     //var idJuego = juego.id;
     var nombreJuego = juego.Nombre;
@@ -127,6 +128,8 @@ router.post('/registrar', function (req, res){
                 })
             })
     }
+
+    escribirLog();
 });
 
 //ruta para listar todos los juegos que han sido registrados en el sistema
@@ -211,6 +214,7 @@ router.get('/listar', (req, res) => {
         archivo += "\n[JUEGOS]:Error al ejecutar la consulta en la BD | " + now.toLocaleTimeString();
         res.status(404).json(objetoJuego);
     }
+    escribirLog();
 });
 
 //función para traer la ip de un juego especifico por ID
@@ -255,6 +259,7 @@ router.get('/getJuego', (req, res)=>{
                 })
             })
     }
+    escribirLog();
 });
 
 //función para traer el total de juegos registrados
@@ -285,6 +290,7 @@ router.get('/getTotalJuegos', (req, res)=>{
         console.log(x);
         res.send(totalJuegos);
     }
+    escribirLog();
 });
 
 router.get('/uuid', (any, res) => {
@@ -309,7 +315,7 @@ router.get('/uuid', (any, res) => {
             res.statusMessage = 'No entro a la creación de uuid';
             res.status(406).json(respuesta);
     }
-    
+    escribirLog();
 });
 
 function listarJuegos(){
@@ -384,6 +390,7 @@ function listarJuegos(){
         console.log("status 404");
         //res.status(404).json(objetoJuego);
     }
+    escribirLog();
 }
 
 function retornaPagina(tabla){
@@ -427,8 +434,11 @@ function retornaPagina(tabla){
     return pagina;
 }
 
-let actual = fs.readFileSync("torneosLog.txt").toString();
-console.log("actual: "+actual);
-fs.writeFileSync("torneosLog.txt", actual+archivo, "");
+
+function escribirLog(){
+    let actual = fs.readFileSync("torneosLog.txt").toString();
+    console.log("actual: "+actual);
+    fs.writeFileSync("torneosLog.txt", actual+archivo, "");
+}
 
 module.exports = router;

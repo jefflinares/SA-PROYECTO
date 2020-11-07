@@ -12,7 +12,7 @@ module.exports = {
     TORNEOS_SERVICE_SECRET: process.env.TORNEOS_SERVICE_SECRET || "torneos1234",
     JUEGOS_SERVICE_HOST: process.env.JUEGOS_SERVICE_HOST || "192.168.1.1",
     JUEGOS_SERVICE_PORT: process.env.JUEGOS_SERVICE_PORT || 3000,
-    DATABASE_HOST: process.env.DATABASE_HOST || "localhost",
+    DATABASE_HOST: process.env.DATABASE_HOST || "35.236.61.119",//"localhost",
     DATABASE_NAME: process.env.DATABASE_NAME || "BDTORNEOS",
     DATABASE_USER: process.env.DATABASE_USER || "root",
     DATABASE_PORT: process.env.DATABASE_PORT || 3306,

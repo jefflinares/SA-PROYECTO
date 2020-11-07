@@ -50,6 +50,7 @@ router.put('/', (req, res) =>{
                     console.log(error);
                     res.statusMessage = "Partida no encontrada";
                     archivo += "\n[PARTIDAS]:Partida no encontrada | " + now.toLocaleTimeString();
+                    escribirLog();
                     res.status(404).json(objectPartida);
                 }
             });
@@ -69,6 +70,7 @@ router.put('/', (req, res) =>{
             res.status(404).json(objectPartida);
         }
     }
+    escribirLog();
 });
 
 //servicio para crear nuevas partidas
@@ -153,6 +155,7 @@ router.post('/crearPartida', (req, res) => {
                 archivo += "\n[PARTIDAS]:STATUS 201 | " + now.toLocaleTimeString();
                 console.log(objetoPartida);
                 //req.body.mensaje = "Exito";
+                escribirLog();
                 res.status(201).json(objetoPartida);  
             }, err => {
                 console.log("esta mostrando el error de intentar consultar el id de juego");
@@ -161,6 +164,7 @@ router.post('/crearPartida', (req, res) => {
                 })
             })
     }
+    escribirLog();
 });
 
 
@@ -186,6 +190,7 @@ router.get('/getUuid', (req, res) => {
             res.statusMessage = 'No entro a la creación de uuid';
             res.status(406).json(respuesta);
     }
+    escribirLog();
     
 });
 
@@ -241,6 +246,7 @@ router.get('/validarJugadorPartida', (req, res)=>{
                 })
             })
     }
+    escribirLog();
 });
 
 router.get('/obtenerPartidas', (req, res)=>{
@@ -268,6 +274,7 @@ router.get('/obtenerPartidas', (req, res)=>{
 
                 console.log('[PARTIDA]:Status:201');
                 archivo += "\n[PARTIDAS]:STATUS 201| " + now.toLocaleTimeString();
+                escribirLog();
                 res.status(201).json(rows);
             }, err => {
                 console.log("[PARTIDA]:esta mostrando el error de intentar consultar el id de juego");
@@ -276,6 +283,7 @@ router.get('/obtenerPartidas', (req, res)=>{
                 })
             })
     }
+    escribirLog();
 });
 
 router.get('/obtenerJuegos', (req, res) => {
@@ -315,9 +323,11 @@ router.get('/obtenerJuegos', (req, res) => {
             .catch(err => {
                 console.log(err);
                 res.statusMessage = "Juego no encontrado";
+                escribirLog();
                 res.status(404).json(objetoTorneo);
             });
     }
+    escribirLog();
 });
 
 router.get('/listarPartidas', (req, res)=>{
@@ -382,6 +392,7 @@ router.get('/listarPartidas', (req, res)=>{
                     archivo += "\n[PARTIDAS]:STATUS 201 | " + now.toLocaleTimeString();
                     pagina = retornaPagina(tabla);
                     //res.send(tabla);
+                    escribirLog();
                     res.send(pagina);
                 }else{
                     console.log("[PARTIDAS]:No se encontraron registros de partidas creadas en BD.");
@@ -410,6 +421,7 @@ router.get('/listarPartidas', (req, res)=>{
                     throw err;
                 })
             })
+            escribirLog();
 });
 
 //funcion para generar el uuid para la partida
@@ -466,8 +478,10 @@ function retornaPagina(tabla){
     return pagina;
 }
 
-let actual = fs.readFileSync("torneosLog.txt").toString();
-console.log("actual: "+actual);
-fs.writeFileSync("torneosLog.txt", actual+archivo, "");
+function escribirLog(){
+    let actual = fs.readFileSync("torneosLog.txt").toString();
+    console.log("actual: "+actual);
+    fs.writeFileSync("torneosLog.txt", actual+archivo, "");
+}
 
 module.exports = router;
