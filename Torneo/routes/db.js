@@ -6,10 +6,10 @@ const config = require('../config');
 class db {
     constructor() {
         this.connection = mysql.createConnection({
-            host: 'localhost',
+            host: '35.236.61.119',
             user: 'root',
             password: 'admin',
-            database: 'bdtorneos',
+            database: 'BDTORNEOS',
             port: 3306,
             multipleStatements: true
         });

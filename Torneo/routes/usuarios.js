@@ -92,7 +92,7 @@ router.post('/insertar', (req, res) => {
         console.log(x);
     }
     }
-    
+    escribirLog();
 });
 
 //servicio para consumir el servicio GET /jugadores del microservicio de usuarios.
@@ -133,6 +133,7 @@ router.get('/listadoUsuarios', (req, res)=>{
         }
     }
     //req.send(text);
+    escribirLog();
     req.send(text);
 });
 
@@ -175,6 +176,7 @@ router.get('/totalUsuarios', (req, res)=>{
         }
     }
     //req.send(text);
+    escribirLog();
     req.send(totalUsuarios);
 });
 
@@ -215,6 +217,7 @@ router.get('/jugadores', (req, res)=>{
             return respuesta;
         }
     }
+    escribirLog();
     req.send(text);
 });
 
@@ -223,7 +226,9 @@ function obtenerTotal(usuarios){
     console.log('Total de Usuarios: ' + totalUsuarios);
     return totalUsuarios;
 }
-let actual = fs.readFileSync("torneosLog.txt").toString();
-console.log("actual: "+actual);
-fs.writeFileSync("torneosLog.txt", actual+archivo, "");
+function escribirLog(){
+    let actual = fs.readFileSync("torneosLog.txt").toString();
+    console.log("actual: "+actual);
+    fs.writeFileSync("torneosLog.txt", actual+archivo, "");
+}
 module.exports = router;

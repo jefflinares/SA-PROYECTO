@@ -1,3 +1,29 @@
 ***********************************************************************************************************************
 *****************************LOG DE OPERACIONES DE MICROSERVICIO DE TORNEOS********************************************
-***********************************************************************************************************************
+***********************************************************************************************************************undefinedundefined
+[MS]:Solicitando token de usuario administrador | 9:45:19 AM
+[MS]:No se pudo obtener el token | 9:45:19 AMundefined
+[MS]:Solicitando token de usuario administrador | 9:46:04 AM
+[MS]:No se pudo obtener el token | 9:46:04 AM
+[MS]:Solicitando token de usuario administrador | 9:46:10 AM
+[MS]:No se pudo obtener el token | 9:46:10 AM
+[MS]:Solicitando token de usuario administrador | 9:48:05 AM
+[MS]:No se pudo obtener el token | 9:48:05 AM
+[MS]:Solicitando token de usuario administrador | 9:50:17 AM
+[MS]:No se pudo obtener el token | 9:50:17 AM
+[MS]:Solicitando token de usuario administrador | 9:52:56 AM
+[MS]:No se pudo obtener el token | 9:52:56 AM
+[MS]:Solicitando token de usuario administrador | 10:43:48 AM
+[MS]:No se pudo obtener el token | 10:43:48 AM
+[MS]:Solicitando token de usuario administrador | 10:52:59 AM
+[MS]:No se pudo obtener el token | 10:52:59 AM
+[MS]:Solicitando token de usuario administrador | 11:40:37 AM
+[MS]:No se pudo obtener el token | 11:40:37 AM
+[MS]:Solicitando token de usuario administrador | 11:41:14 AM
+[MS]:No se pudo obtener el token | 11:41:14 AM
+[MS]:Solicitando token de usuario administrador | 11:41:19 AM
+[MS]:No se pudo obtener el token | 11:41:19 AM
+[MS]:Solicitando token de usuario administrador | 11:42:31 AM
+[MS]:Solicitando token de usuario administrador | 11:42:59 AM
+[MS]:Solicitando token de usuario administrador | 11:47:29 AM
+[MS]:Solicitando token de usuario administrador | 11:48:04 AM
