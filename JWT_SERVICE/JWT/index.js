@@ -107,11 +107,5 @@ app.post('/token', async function (req, res)  {
 })
 
 app.listen(config.PORT, () => {
-  var token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY29wZXMiOlsiZGFkb3MudGlyYXIiLCJ0b3JuZW9zLnBhcnRpZGEucHV0IiwidXN1YXJpb3MuanVnYWRvcmVzLmdldCIsInVzdWFyaW9zLmxvZ2luIl0sImlhdCI6MTYwNDc2ODA1NSwiZXhwIjoxNjA0NzY4NjU1fQ.RNph9sWWASNKLMAG0KL_4lQBOLi8y2rq9ATM02W53gKhEAR3Zq7xsKZRYlq0LexXk3upQ--k3SEVacdymWt-Mgj6OZRQCiefamnz4Ssb9KKYPoxwmt_eOjS_kbgks2KjM0vwfTqHjxpesUGdx99y-niafRq6TlEOxJGzqBAF90s";
-  if(jwt_service.verify(token)){
-    console.log('Token validado');
-  }else{
-    console.log('Token no se pudo validar');
-  }
   console.log(`Example app listening at http://localhost:${config.PORT}`)
 })
