@@ -144,7 +144,7 @@ function getToken(){
 
 function verify(token) {
   var verifyOptions = {
-      expiresIn:  "30d",
+      expiresIn:  "10m",
       algorithm:  ["RS256"]
   };
    try{
