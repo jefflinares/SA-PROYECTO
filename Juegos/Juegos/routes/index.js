@@ -158,7 +158,7 @@ router.post('/generar', async function(req, res, next) {
   if(jugadores && id)
   {   
       if(jugadores.length != 2)
-          {res.status(406).send({msg: 'Parámetros no válidos'}); lib.appendToLog() return;}
+          {res.status(406).send({msg: 'Parámetros no válidos'});  return;}
       
       //BUSCAR A LOS JUGADORES
       /*
