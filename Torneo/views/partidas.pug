@@ -14,5 +14,23 @@ block content
         form(action="http://localhost:3000/partidas/listarPartidas", method="GET")
           label(for="Nombre") Nombre de Torneo: 
           br
-          button(type="submit") Crear
+          button(type="submit") Cargar
           hr
+
+      .col-md-4
+        h2 Actualizar Partida
+        p
+          | Detalle de las partidas creadas para cada torneo
+
+        form(action="http://localhost:3000/partidas/", method="PUT")
+          label(for="id") ID Partida: 
+          br
+          input(type="text" name="id")
+          br
+          label(for="Marcador") Marcador:
+          br
+          input(type="text" name="Marcador")
+          br
+          button(type="submit") Actualizar
+          hr  
+      
