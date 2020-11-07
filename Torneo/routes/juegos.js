@@ -1,16 +1,19 @@
 var express = require('express');
 var router = express.Router();
+var regex = require('regex');
 const path = require('path');
 const bodyParser = require('body-parser');
 var db = require('./db.js');
 var config = require('../config');
+var fs = require('fs');
+var archivo;
+var now = new Date();
 //Routes
 router.get('/', (req, res) => {
     var id = req.query.id;
     console.log(id);
     const regex = /^[0-9]*$/;
-    const verificacion = regex.text(id);
-
+    const verificacion = regex.test(id);
     var objetoJuego = {
         id:0,
         Nombre: "example",
@@ -46,7 +49,7 @@ router.get('/', (req, res) => {
 
 router.post('/registrar', function (req, res){
     var database = new db();
-
+    archivo += "\n[JUEGOS]:Ingresando a POST juegos/registrar | " + now.toLocaleTimeString();
     var objetoJuego = {
         id: 0,
         Nombre: "example", 
@@ -55,6 +58,8 @@ router.post('/registrar', function (req, res){
 
     var juego = req.body;
     console.log(req.body);
+    archivo += "\n[JUEGOS]:Estructura de body en POST: | " + now.toLocaleTimeString();
+    archivo += "\n"+ req.body;
 
     //var idJuego = juego.id;
     var nombreJuego = juego.Nombre;
@@ -65,22 +70,27 @@ router.post('/registrar', function (req, res){
 
     if(nombreJuego == undefined || IPJuego==undefined){
         console.log("No se encontraron datos en la BD");
+        archivo += "\n[JUEGOS]:No se encontraron datos en la BD | " + now.toLocaleTimeString();
         res.statusMessage = "Datos incorrectos";
         res.status(406).json(objetoJuego);
     }else{
         try{
             console.log("Entro a codigo para realizar la insersión");
+            archivo += "\n[JUEGOS]:Insertando información de nuevo juego en la BD | " + now.toLocaleTimeString();
             var query = database.query('INSERT INTO BDTORNEOS.JUEGOS(Nombre, IP) VALUES(?,?)', [nombreJuego, IPJuego] , function (error, result){
                 if(error){
                     console.log("Error al insertar en la base de datos.");
+                    archivo += "\n[JUEGOS]:Error al insertar juego en la BD | " + now.toLocaleTimeString();
                     res.statusMessage = "Datos icorrectos"
                     res.status(406).json(objetoJuego);
                 }else{
                     console.log("--------------Dato insertado correctamente---------------------");
+                    archivo += "\n[JUEGOS]:Juego insertado en BD exitosamente | " + now.toLocaleTimeString();
                 }});
         }
         catch(x){
             console.log("Excepción no controlada: "+ x);
+            archivo += "\n[JUEGOS]:Excepción no controlada | " + now.toLocaleTimeString();
             res.statusMessage = "Datos incorrectos";
             res.status(406).json(objetoJuego);
             return;
@@ -101,6 +111,7 @@ router.post('/registrar', function (req, res){
                 objetoJuego.Nombre = nombreJuego;
                 objetoJuego.IP = IPJuego;
                 console.log('Status:201');
+                archivo += "\n[JUEGOS]:STATUS 201 | " + now.toLocaleTimeString();
                 console.log(objetoJuego);
                 req.body.mensaje = "Exito";
                 console.log(req.body.mensaje);
@@ -110,6 +121,7 @@ router.post('/registrar', function (req, res){
                 
             }, err => {
                 console.log("esta mostrando el error de intentar consultar el id de juego");
+                archivo += "\n[JUEGOS]:Error al insertar información en la BD | " + now.toLocaleTimeString();
                 return database.close().then(() => {
                     throw err;
                 })
@@ -119,6 +131,7 @@ router.post('/registrar', function (req, res){
 
 //ruta para listar todos los juegos que han sido registrados en el sistema
 router.get('/listar', (req, res) => {
+    archivo += "\n[JUEGOS]:Ingeesa petición GET en juegos/listar | " + now.toLocaleTimeString();
     var objetoJuego = {
         id:0,
         Nombre: "example",
@@ -127,11 +140,13 @@ router.get('/listar', (req, res) => {
     
     
     //aqui se debe hacer una búsqueda de los datos del juego en base de datos.
+    archivo += "\n[JUEGOS]:Estableciendo conexión con la BD | " + now.toLocaleTimeString();
     var database = new db();
     var sql = 'SELECT * FROM BDTORNEOS.JUEGOS';
     try{
         database.query(sql)
         .then(rows => {
+            archivo += "\n[JUEGOS]:Conexión con BD establecida | " + now.toLocaleTimeString();
             objetoJuego.id = Number(rows[0].ID);
             objetoJuego.Nombre = rows[0].NOMBRE;
             objetoJuego.IP = rows[0].IP;
@@ -142,6 +157,7 @@ router.get('/listar', (req, res) => {
             var IP = "";
             var jsonListado = '';
             var tabla = "";
+            archivo += "\n[JUEGOS]:Creando la tabla de datos | " + now.toLocaleTimeString();
             if (rows[0]!=null){
                 //se crean los encabezados de la tabla
                 tabla = "<table border=1>"+
@@ -172,6 +188,7 @@ router.get('/listar', (req, res) => {
 
                 //res.statusMessage = "Listado de Juegos Encontrado";
                 //res.status(201).json(objetoListado);
+                archivo += "\n[JUEGOS]:STATUS 201 | " + now.toLocaleTimeString();
                 console.log("Status 201");
                 var pagina = retornaPagina(tabla);
                 //res.send(tabla);
@@ -179,6 +196,7 @@ router.get('/listar', (req, res) => {
             }
         }, err => {
             return database.close().then(() => {
+                archivo += "\n[JUEGOS]:Excepción no controlada | " + now.toLocaleTimeString();
                 throw err;
             })
         })
@@ -190,16 +208,19 @@ router.get('/listar', (req, res) => {
     }catch(x){
         console.log(x);
         res.statusMessage = "Error al ejecutar la consulta en la BD";
+        archivo += "\n[JUEGOS]:Error al ejecutar la consulta en la BD | " + now.toLocaleTimeString();
         res.status(404).json(objetoJuego);
     }
 });
 
 //función para traer la ip de un juego especifico por ID
 router.get('/getJuego', (req, res)=>{
+    archivo += "\n[JUEGOS]:Ingresa peticiòn GET a juegos/getJuego | " + now.toLocaleTimeString();
     var id = req.query.ID;
     const regex = /^[0-9]*$/;
-    const verificacion = regex.text(id);
+    const verificacion = regex.test(id);
     console.log('[JUEGOS]:Se solicita la IP del juego con ID:'+id);
+    archivo += "\n[JUEGOS]:Se solicita la IP del juego con ID: "+id + " | " + now.toLocaleTimeString();
     var objetoJuego = {
         id:0,
         Nombre: "example",
@@ -208,20 +229,24 @@ router.get('/getJuego', (req, res)=>{
 
     if(verificacion == false){
         console.log('[JUEGO]:Id de juego no válido');
+        archivo += "\n[JUEGOS]:ID de juego no válido | " + now.toLocaleTimeString();
         res.statusMessage = "Id de juego no válido";
         res.status(404).json(objetoJuego);
     }else{
         var idJuego = Number(id);
         //aqui se debe hacer una búsqueda de los datos del juego en base de datos.
         var database = new db();
-        var sql = 'SELECT * FROM DBTORNEOS.JUEGOS WHERE ID =' + id;
+        var sql = 'SELECT * FROM BDTORNEOS.JUEGOS WHERE ID =' + id;
         database.query(sql)
             .then(rows => {
                 objetoJuego.id = Number(rows[0].ID);
                 objetoJuego.Nombre = rows[0].NOMBRE;
                 objetoJuego.IP = rows[0].IP;
-                console.log("Status 201");
-                req.status(201).text(objetoJuego.IP);
+                archivo += "\n[JUEGOS]:STATUS 201 | " + now.toLocaleTimeString();
+                console.log("[JUEGOS]:Status 201");
+                //res.status(201).json(objetoJuego.IP);
+                console.log("[JUEGOS]:La ip para el juego indicado es: "+objetoJuego.IP);
+                archivo += "\n[JUEGOS]:IP generada exitosamente => "+ objetoJuego.IP + " | " + now.toLocaleTimeString();
                 res.send(objetoJuego.IP);
 
             }, err => {
@@ -235,14 +260,16 @@ router.get('/getJuego', (req, res)=>{
 //función para traer el total de juegos registrados
 router.get('/getTotalJuegos', (req, res)=>{
     console.log('[JUEGOS]:Se solicita el total de juegos');
+    archivo += "\n[JUEGOS]:Solicitando total de juegos en juegos/getTotalJuegos | " + now.toLocaleTimeString();
     var totalJuegos = 0;
     try{
         //aqui se debe hacer una búsqueda de los datos del juego en base de datos.
         var database = new db();
-        var sql = 'SELECT COUNT(*) AS TOTAL FROM DBTORNEOS.JUEGOS';
+        var sql = 'SELECT COUNT(*) AS TOTAL FROM BDTORNEOS.JUEGOS';
         database.query(sql)
             .then(rows => {
                 totalJuegos = rows[0].TOTAL;
+                archivo += "\n[JUEGOS]:STATUS 201 | " + now.toLocaleTimeString();
                 console.log("[JUEGOS]:Status 201");
                 console.log("[JUEGOS]:Total de juegos: "+totalJuegos);
                 res.send(totalJuegos);
@@ -254,6 +281,7 @@ router.get('/getTotalJuegos', (req, res)=>{
             })
     }catch(x){
         console.log('[JUEGOS]:Error al intentar consultar el total de juegos');
+        archivo += "\n[JUEGOS]:Error al intentar consultar el total de juegos | " + now.toLocaleTimeString();
         console.log(x);
         res.send(totalJuegos);
     }
@@ -261,22 +289,23 @@ router.get('/getTotalJuegos', (req, res)=>{
 
 router.get('/uuid', (any, res) => {
     console.log('entro al servicio uuid');
+    archivo += "\n[JUEGOS]:Solicitud de UUID para Partida juegos/uuid | " + now.toLocaleTimeString();
     var respuesta = {
         id: 0,
         uuid: 'xxxxx-xxxxx-xxxxx'
     }
     try{
-            console.log('entro al try');
             var uuid1 = crear_uuid();
-            console.log('ya asignó el uuid');
             
             respuesta.uuid = uuid1;
+            archivo += "\n[JUEGOS]:UUID generado exitosamente: "+ respuesta.uuid + " | " + now.toLocaleTimeString();
             res.statusMessage = 'UUID Generado';
             res.status(201).json(respuesta);
 
 
     }catch(x){
         console.log('entro en la exception');
+        archivo += "\n[JUEGOS]:Excepción no controlada | " + now.toLocaleTimeString();
             res.statusMessage = 'No entro a la creación de uuid';
             res.status(406).json(respuesta);
     }
@@ -397,5 +426,9 @@ function retornaPagina(tabla){
     console.log('');
     return pagina;
 }
+
+let actual = fs.readFileSync("torneosLog.txt").toString();
+console.log("actual: "+actual);
+fs.writeFileSync("torneosLog.txt", actual+archivo, "");
 
 module.exports = router;

@@ -2,13 +2,17 @@ var express = require('express');
 var router = express.Router();
 const path = require('path');
 var db = require('./db.js');
+var regex = require('regex');
 const config = require('../config');
+var fs = require('fs');
+var archivo;
+var now = new Date();
 //Routes
 router.get('/', (req, res) => {
     var id = req.query.id;
     console.log(id);
     const regex = /^[0-9]*$/;
-    const verificacion = regex.text(id);
+    const verificacion = regex.test(id);
 
     //información de torneo tentativa 
     var objetoTorneo = {
@@ -46,6 +50,7 @@ router.get('/', (req, res) => {
 });
 
 router.post('/crear', function (req, res){
+    archivo += "\n[TORNEOS]:POST crear nuevo torneo | " + now.toLocaleTimeString();
     var database = new db();
     var fechaActual = new Date();
     console.log(fechaActual);
@@ -63,6 +68,7 @@ router.post('/crear', function (req, res){
     //var fechaTorneo = torneo.Fecha;
 
     if(Nombre == undefined){
+        archivo += "\n[TORNEOS]:No se encontraron datos en la BD | " + now.toLocaleTimeString();
         console.log("No se encontraron datos en la BD");
         res.statusMessage = "Datos incorrectos";
         res.status(406).json(objetoTorneo);
@@ -71,6 +77,7 @@ router.post('/crear', function (req, res){
             var query = database.query('INSERT INTO BDTORNEOS.TORNEOS(NOMBRE) VALUES(?)', [Nombre] , function (error, result){
                 if(error){
                     console.log("Error al insertar en la base de datos.");
+                    archivo += "\n[TORNEOS]:Error al insertar en la bade de datos. | " + now.toLocaleTimeString();
                     res.statusMessage = "Datos icorrectos"
                     res.status(406).json(objetoTorneo);
                 }});
@@ -94,6 +101,7 @@ router.post('/crear', function (req, res){
                 objetoTorneo.id = num;
                 objetoTorneo.Nombre = Nombre;
                 objetoTorneo.Fecha = fecha;
+                archivo += "\n[TORNEOS]:STATUS 201 | " + now.toLocaleTimeString();
                 res.status(201).json(objetoTorneo);
 
             }, err => {
@@ -111,6 +119,7 @@ router.post('/crear', function (req, res){
 
 //SERVICIO PARA LISTAR LOS TORNEOS CREADOS
 router.get('/listarTorneos', (req, res)=>{
+    archivo += "\n[TORNEOS]:GET de listado de torneos | " + now.toLocaleTimeString();
     var objetoTorneo = {
         id:0,
         Nombre: "example",
@@ -161,7 +170,7 @@ router.get('/listarTorneos', (req, res)=>{
                     console.log(jsonListado);
                     console.log("-------------------");
                     console.log(JSON.stringify(jsonListado));
-
+                    archivo += "\n[TORNEOS]:STATUS 201 | " + now.toLocaleTimeString();
                     console.log("Status 201");
                     var pagina = retornaPagina(tabla);
                     //res.send(tabla);
@@ -180,6 +189,7 @@ router.get('/listarTorneos', (req, res)=>{
 
 //servicio para empezar la simulación de un nuevo torneo
 router.put('/empezarTorneo', (req, res)=>{
+    archivo += "\n[TORNEOS]:PUT iniciando torneo... | " + now.toLocaleTimeString();
     var jugadoresAsignados = [];
     var respuesta = {
         Torneo: 0,
@@ -219,10 +229,11 @@ router.put('/empezarTorneo', (req, res)=>{
     var id = req.query.id;
     console.log(id);
     const regex = /^[0-9]*$/;
-    const verificacion = regex.text(id);
+    const verificacion = regex.test(id);
 
     if(verificacion == false){
         res.statusMessage = "Id de partida no válido";
+        archivo += "\n[TORNEOS]:ID de partida no válido | " + now.toLocaleTimeString();
         res.status(404).json(objetoJuego);
     }else{
         var idTorneo = Number(id);
@@ -248,6 +259,7 @@ router.put('/empezarTorneo', (req, res)=>{
 
             //se consumirá el servicio de usuarios para obtener el total de usuarios.
             //URL del microservicio de usuarios
+            archivo += "\n[TORNEOS]:Consumiendo servicio de usuarios para total de jugadores | " + now.toLocaleTimeString();
             var url = "http://"+config.USERS_SERVICE_HOST + ":" + config.USERS_SERVICE_PORT + "/totalUsuarios/";
             var req = new XMLHttpRequest();
             req.open("GET",url);
@@ -288,6 +300,7 @@ router.put('/empezarTorneo', (req, res)=>{
                             idJugador1 = jugadorRandom(totalUsuarios);
                              var jugadorValido;
                             //se consume el servicio de usuarios para traer la informaciòn del jugador1
+                            archivo += "\n[TORNEOS]:Se solicita a usuarios/jugador/{id} la cantidad de personas | " + now.toLocaleTimeString();
                             req.open("GET",urlJugador+idJugador1);
                             req.onreadystatechange = function() {
                                 if(req.readyState == 4 && req.status == 200) { 
@@ -295,6 +308,7 @@ router.put('/empezarTorneo', (req, res)=>{
                                     try{
                                         jugador1 = JSON.parse(req.responseText);
                                         console.log("jugador1: " + jugador1);
+                                        archivo += "\n[TORNEOS]:Jugador 1 definido | " + now.toLocaleTimeString();
                                     }catch(err){
                                         console.log(err);
                                     } 
@@ -304,12 +318,14 @@ router.put('/empezarTorneo', (req, res)=>{
 
                             //se obtiene el id de jugador 2 para la partida
                             idJugador2 = jugadorRandom(totalUsuarios);
+                            archivo += "\n[TORNEOS]:Se obtiene ID de jugador 2 | " + now.toLocaleTimeString();
                             //mientras el id2 sea igual al de id jugador 1 se seguirà solicitando un nùmero hasta que sea distinto
                             while(idJugador2 == idJugador1){
                                 idJugador2 = jugadorRandom(totalUsuarios);
                             }
 
                             //se consume el servicio de usuarios para traer la informaciòn del jugador1
+                            archivo += "\n[TORNEOS]:GET a servicio de usuarios/jugador | " + now.toLocaleTimeString();
                             req.open("GET",urlJugador+idJugador2);
                             req.onreadystatechange = function() {
                                 if(req.readyState == 4 && req.status == 200) { 
@@ -327,6 +343,7 @@ router.put('/empezarTorneo', (req, res)=>{
                             //ya que se tienen los dos jugadores, se procederá a crear la partida.
                             //Para este punto ya se cuenta con el id de Torneo, Jugador1, Jugador2
                             //Pendiente: hacer función para obtener id de juego random
+                            archivo += "\n[TORNEOS]:Creando partida... | " + now.toLocaleTimeString();
                             var urlTotalJuegos = "http://"+config.USERS_SERVICE_HOST + ":" + config.USERS_SERVICE_PORT + "/getTotalJuegos";
                             var urlIpJuego = "http://"+config.USERS_SERVICE_HOST + ":" + config.USERS_SERVICE_PORT + "/getJuego/";
                             var totalJugadoresTorneo;
@@ -334,6 +351,7 @@ router.put('/empezarTorneo', (req, res)=>{
                             var IpJuegoTorneo;
 
                             //se obtiene el total de juegos para seleccionar un juego al azar
+                            archivo += "\n[TORNEOS]:GET de información de juegos | " + now.toLocaleTimeString();
                             req.open("GET",urlTotalJuegos);
                             req.onreadystatechange = function() {
                                     //req.responseText;
@@ -346,6 +364,7 @@ router.put('/empezarTorneo', (req, res)=>{
                             }
                             req.close();
                             //Se verifica si el total de torneos es mayor a cero para elegir un id de juego.
+                            archivo += "\n[TORNEOS]:Verificando total de torneos | " + now.toLocaleTimeString();
                             if (totalJugadoresTorneo > 0){
                                 idJuegoTorneo = juegoRandom(totalJugadoresTorneo);
                             }else{
@@ -353,11 +372,12 @@ router.put('/empezarTorneo', (req, res)=>{
                             }
                             
                             //Se consume el servicio para traer la IP de un juego especifico
-                            req.open("GET",urlIpJuego);
+                            req.open("GET",urlIpJuego+'?ID='+idJuegoTorneo);
                             req.onreadystatechange = function() {
                                     //req.responseText;
                                 try{
                                     IpJuegoTorneo = req.responseText
+                                    archivo += "\n[TORNEOS]:IP DE JUEGO SELECCIONADO | " + now.toLocaleTimeString();
                                     console.log("[JUEGOS]:IP del juego seleccionado para la partida: " + IpJuegoTorneo);
                                 }catch(err){
                                     console.log(err);
@@ -377,6 +397,7 @@ router.put('/empezarTorneo', (req, res)=>{
 
                             //Ahora se procede a generar la partida del torneo 
                             //Primero se debe obtener un uuid para la partida a crear
+                            archivo += "\n[TORNEOS]:GET de UUID a servicio de Jugadores | " + now.toLocaleTimeString();
                             var urlUuid = "http://"+config.USERS_SERVICE_HOST + ":" + config.USERS_SERVICE_PORT + "/getUuid";
                             var uuidPartida; 
                             req.open("GET",urlUuid);
@@ -408,6 +429,7 @@ router.put('/empezarTorneo', (req, res)=>{
 
                             
                             var respuesta;
+                            archivo += "\n[TORNEOS]:POST de nuevo torneo  | " + now.toLocaleTimeString();
                             var urlCrearPartida = "http://"+config.USERS_SERVICE_HOST + ":" + config.USERS_SERVICE_PORT + "/crearPartida";
                             req.open("POST", urlCrearPartida);
                             let jsonDataPartida = JSON.stringify(objetoPartida);
@@ -431,10 +453,21 @@ router.put('/empezarTorneo', (req, res)=>{
                         }
 
                         //Aqui se realizarà la lògica de jugar la partida y obtener al ganador.
+                        archivo += "\n[TORNEOS]:GET de informaciòn de juegos. | " + now.toLocaleTimeString();
                         var urlTotalJuegos = "http://"+config.USERS_SERVICE_HOST + ":" + config.USERS_SERVICE_PORT + "/obtenerPartidas";
                         var listadoPartidas;
+
+                        var objetoPartidaTorneo = {
+                            ronda: 0,
+                            idTorneo: 0
+                        }
+
+                        objetoPartidaTorneo.ronda = i;
+                        objetoPartidaTorneo.idTorneo = idTorneoEmpezado;
+
                         //se manda a traer el listado de partidas para una ronda especìfica
-                        req.open("GET",urlTotalJuegos+'?ronda='+i+'&torneo='+idTorneoEmpezado);
+                        //req.open("GET",urlTotalJuegos+'?ronda='+i+'&torneo='+idTorneoEmpezado);
+                        req.open("GET", urlTotalJuegos);
                         req.onreadystatechange = function() {
                             if(req.readyState == 4 && req.status == 200) { 
                                 //req.responseText;
@@ -447,9 +480,11 @@ router.put('/empezarTorneo', (req, res)=>{
                                 
                             }
                         }
+                        req.send(objetoPartidaTorneo);
                         req.close();
 
                         //se recorrerá el json de partidas creadas
+                        archivo += "\n[TORNEOS]:POST a servicio de simulación de plantilla | " + now.toLocaleTimeString();
                         for(x of listadoPartidas){
                             //Aqui adentro se mandará a consumir el servicio de juegos
                             var urlSimularPartida = "http://"+config.JUEGOS_SERVICE_HOST + ":" + config.JUEGOS_SERVICE_PORT + "/simular";
@@ -462,6 +497,9 @@ router.put('/empezarTorneo', (req, res)=>{
 
                             req.open("POST", urlSimularPartida);
                             let jsonSimulacionPartida = JSON.stringify(objetoJuegoServicio);
+                            console.log("[TORNEOS]:Estructurando partida a jugar...");
+                            console.log(jsonSimulacionPartida);
+
                             var respuesta;
                             req.onreadystatechange = function() {
                                 if(req.readyState == 4 && req.status == 201) { 
@@ -477,16 +515,23 @@ router.put('/empezarTorneo', (req, res)=>{
                             }
                             //Se envia el json con los datos de la partida a crear y se asigna la respuesta al objeto partida.
                             objetoJuegoServicio = req.send(jsonSimulacionPartida);
-                            console.log("[PARTIDA]:Partida simulada exitosamente con la siguiente información: ");
-                            console.log(objetoPartida);
+                            console.log("[TORNEOS]:Partida simulada exitosamente con la siguiente información: ");
+                            console.log(objetoJuegoServicio);
                             req.close();
+
+                            //la respuesta del termino de la partida se enviará directamente desde el juego.
+
                         }
 
                         //se recalcula la cantidad de llaves
+                        archivo += "\n[TORNEOS]:Se realcularon las llaves | " + now.toLocaleTimeString();
                         cantidadLlaves = Number(cantidadLlaves)/2;
+
+                        archivo += "\n[TORNEOS]:Se avanza de ronda | " + now.toLocaleTimeString();
                     }
                 }else{
                     console.log('No  hay suficientes usuarios para crear un torneo');
+                    archivo += "\n[TORNEOS]:ERROR no hay suficientes usuarios para crear las partidas. | " + now.toLocaleTimeString();
                 }
             }
         }
@@ -573,5 +618,10 @@ function totalRondas(totalUsuarios){
     }
     return rondas;
 }
+
+let actual = fs.readFileSync("torneosLog.txt").toString();
+console.log("actual: "+actual);
+fs.writeFileSync("torneosLog.txt", actual+archivo, "");
+
 module.exports = router;
 
