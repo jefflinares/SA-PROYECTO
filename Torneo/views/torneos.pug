@@ -9,36 +9,35 @@ block content
         h2 CREAR TORNEO
         p
           | Cree un nuevo torneo
-        p
-          label(for="textJuego") Juego: 
+
+        form(action="http://localhost:3000/torneos/crear", method="POST")
+          label(for="Nombre") Nombre de Torneo: 
           br
-          input(type="text", name="textJuego")
+          input(type="text", name="Nombre")
           br
-          
-          label(for="textTotal") Total de Jugadores:
-          br
-          input(type="text", name="textTotal")
-          br
-          label(for="textGanador") Ganador:
-          br
-          input(type="text", name="textGanador")
-          br
-          
-          button(type="submit" name="botonCrearTorneo") Crear
-          
-          br
-          a.btn.btn-secondary(href='#' role='button') Ver más &raquo;
+          button(type="submit") Crear
+          hr
       .col-md-4
-        h2 Contenido
+        h2 Listar Torneos
         p
-          | Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
-        p
-          a.btn.btn-secondary(href='#' role='button') Ver más &raquo;
+          | Visualizar los torneos creados:
+
+        form(action="http://localhost:3000/torneos/listarTorneos", method="GET")
+          hr
+          button(type="submit") Listar Torneos
+          hr
       .col-md-4
-        h2 Contenido
+        h2 Iniciar Torneo
         p
-          | Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
-        p
-          a.btn.btn-secondary(href='#' role='button') Ver más &raquo;
+          | Ingrese el ID del torneo que desea iniciar:
+
+        form(action="http://localhost:3000/torneos/empezarTorneo", method="GET")
+
+          label(for="id") ID de Torneo: 
+          br
+          input(type="text", name="id")
+          br
+          button(type="submit") Iniciar
+          hr
     hr
 

@@ -3,7 +3,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.render('index', { title: 'MS Torneos' });
 });
 
 router.get('/usuarios', function(req, res, next) {
@@ -14,8 +14,8 @@ router.get('/juegos', function(req, res, next) {
   res.render('juegos', {title: 'Gestión de Juegos'});
 });
 
-router.get('/servicios', function(req, res, next) {
-  res.render('servicios', {title: 'Servicios'});
+router.get('/partidas', function(req, res, next) {
+  res.render('partidas', {title: 'Gestión de Partidas'});
 });
 
 router.get('/torneos', function(req, res, next) {
