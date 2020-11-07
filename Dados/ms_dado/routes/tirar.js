@@ -4,7 +4,7 @@ var request = require('request');
 const jwt   = require('jsonwebtoken');
 const fs   = require('fs');
 const { Console } = require('console');
-var publicKEY  = fs.readFileSync('./keys/public.key', 'utf8');  
+var publicKEY  = fs.readFileSync('./keys/public.key', 'base64');  
 
 
 /* GET tirar dados listing. */
