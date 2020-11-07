@@ -241,7 +241,7 @@ router.get('/', function(req,res, next){
      res.status(401).send({error: "Es necesario el token de autenticación"})         
      return     
   }      
-  oken = token.replace('Bearer ', '')
+  token = token.replace('Bearer ', '')
   switch (validar(token, 'usuarios.jugadores.get')){
     case 0: 
     case 1: res.status(403).send({msg: 'token no valido'});  return; 
