@@ -1,0 +1,4 @@
+
+MS-DADOS-TIRAR(GET) 2020-11-7 1:11:41 status 200 /tirar/{3}
+MS-DADOS-TIRAR(GET) 2020-11-7 1:11:47 /tirar/{A} status 400
+MS-DADOS-TIRAR(GET) 2020-11-7 1:11:52 /tirar/{2} status 200
