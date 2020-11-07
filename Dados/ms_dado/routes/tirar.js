@@ -70,7 +70,7 @@ function validar(token, metodo){
     var token_verify=verify(token);
     if(token_verify){
       var token_decode= decode(token);
-      if( token_decode.payload.scope.indexOf(metodo)==-1){
+      if( token_decode.payload.scopes.indexOf(metodo)==-1){
         return 1; //no tiene acceso al metodo
       }
       else{
