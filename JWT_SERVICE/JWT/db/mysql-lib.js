@@ -50,8 +50,9 @@ const returnQuery = function(service){
         case 0: //INSERT
           try {
             con.query(query, function(err, result){
-              if( err ) throw err;
+              if( err ) { throw err;}
               console.log("1 record inserted");
+              return true;
             });
             break;
           } catch (error) {
@@ -63,7 +64,7 @@ const returnQuery = function(service){
         try {
           return new Promise( (resolve, reject) => {
             con.query(query, function (err, result, fields){
-              if(err){ throw err; reject(err);}
+              if(err){ reject(err);  throw err; }
               resolve(result);
             });
           });
@@ -75,6 +76,7 @@ const returnQuery = function(service){
     else {
       console.log("No existe la conexión");
     }
+    return null;
   }
 
   module.exports = {

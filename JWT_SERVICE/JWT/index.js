@@ -13,18 +13,28 @@ const mysql_lib = require("./db/mysql-lib");
 
 
 var connection = null;
-function conectar(){
+async function conectar(){
     try{
       if(!connection)
       {
         var dataBaseHandler = new DataBaseHandler();
         connection = dataBaseHandler.createConnection();
-      /*
-        mysql_lib.execute(connection, mysql_lib.returnQuery("dados"), 0);
-        mysql_lib.execute(connection, mysql_lib.returnQuery("users"), 0);
-        mysql_lib.execute(connection, mysql_lib.returnQuery("torneos"), 0);
-        mysql_lib.execute(connection, mysql_lib.returnQuery("juegos"), 0);
-*/
+      
+        let query = "SELECT id_servicio FROM servicio "+
+        "WHERE id = 'dados';";
+        
+
+        let existe = await mysql_lib.execute(connection, query, 1 );
+        if(existe && existe.length > 0){
+          //Si existe un servicio con esas credenciales
+          let id_servicio = existe[0].id_servicio;
+          
+        }else{
+          mysql_lib.execute(connection, mysql_lib.returnQuery("dados"), 0);
+          mysql_lib.execute(connection, mysql_lib.returnQuery("users"), 0);
+          mysql_lib.execute(connection, mysql_lib.returnQuery("torneos"), 0);
+          mysql_lib.execute(connection, mysql_lib.returnQuery("juegos"), 0);
+        }
       }
     }catch(erro)
     {
@@ -55,6 +65,8 @@ function logger(req, res, next){
 
 app.get('/', (req, res)=> {
     conectar();
+    
+
     res.send("Servidor de tokens - Grupo 8");
 });
 
@@ -63,6 +75,7 @@ app.post('/token', async function (req, res)  {
   //Obtener las credenciales
   const id = req.query["id"];
   const secret = req.query["secret"];
+
 
   //Buscar credenciales en la DB
   let query = "SELECT id_servicio, methods FROM servicio "+
@@ -94,5 +107,11 @@ app.post('/token', async function (req, res)  {
 })
 
 app.listen(config.PORT, () => {
+  var token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY29wZXMiOlsiZGFkb3MudGlyYXIiLCJ0b3JuZW9zLnBhcnRpZGEucHV0IiwidXN1YXJpb3MuanVnYWRvcmVzLmdldCIsInVzdWFyaW9zLmxvZ2luIl0sImlhdCI6MTYwNDc2ODA1NSwiZXhwIjoxNjA0NzY4NjU1fQ.RNph9sWWASNKLMAG0KL_4lQBOLi8y2rq9ATM02W53gKhEAR3Zq7xsKZRYlq0LexXk3upQ--k3SEVacdymWt-Mgj6OZRQCiefamnz4Ssb9KKYPoxwmt_eOjS_kbgks2KjM0vwfTqHjxpesUGdx99y-niafRq6TlEOxJGzqBAF90s";
+  if(jwt_service.verify(token)){
+    console.log('Token validado');
+  }else{
+    console.log('Token no se pudo validar');
+  }
   console.log(`Example app listening at http://localhost:${config.PORT}`)
 })
