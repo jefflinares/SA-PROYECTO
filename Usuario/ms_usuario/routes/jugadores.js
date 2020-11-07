@@ -12,7 +12,10 @@ var publicKEY  = fs.readFileSync('./keys/public.key', 'utf8');
 
 /* GET users listing. */
 router.get('/:id', function(req, res, next) { //consigue los datos de un jugador
-  
+  var id= req.params.id;
+  fs.appendFile('./LogsG/logs.txt','\nMS-USUARIO-LOGIN(GET) '+ getDate() + "  Get informacion usuario:"+id, function(err) {
+    if(err) return console.error(err);
+  });
   //Verificacion de Token
   var token = req.headers['authorization']     
   if(!token){         
@@ -28,7 +31,7 @@ router.get('/:id', function(req, res, next) { //consigue los datos de un jugador
   }
   //Fin de verificacion de token
 
-  var id= req.params.id;
+  
   console.log(id);
   const regex = /^[0-9]*$/;
   const verificacion = regex.test(id); 
@@ -82,8 +85,12 @@ router.get('/:id', function(req, res, next) { //consigue los datos de un jugador
   }
 });
 router.put('/:id', function (req, res) { //Actualiza los datos de un jugador
+  var id= req.params.id;
+  fs.appendFile('./LogsG/logs.txt','\nMS-USUARIO-LOGIN(PUT) '+ getDate() + "  Actualizacio informacion usuario:"+id, function(err) {
+    if(err) return console.error(err);
+  });
   //Verificacion de Token
-  var token = req.headers['authorization']     
+    var token = req.headers['authorization']     
   if(!token){         
       res.status(401).send({error: "Es necesario el token de autenticación"})         
       return     
@@ -97,7 +104,7 @@ router.put('/:id', function (req, res) { //Actualiza los datos de un jugador
   }
   //Fin de verificacion de token
 
-  var id= req.params.id;
+  
   const regex = /^[0-9]*$/;
   const verificacion = regex.test(id); 
 
@@ -152,6 +159,10 @@ router.put('/:id', function (req, res) { //Actualiza los datos de un jugador
 });
 router.post('/', function (req, res) { //Actualiza los datos de un jugador
    //Verificacion de Token
+   fs.appendFile('./LogsG/logs.txt','\nMS-USUARIO-LOGIN(POST) '+ getDate() + "  Crear Usuario nuevo:", function(err) {
+      if(err) return console.error(err);
+   });
+
    var token = req.headers['authorization']     
    if(!token){         
        res.status(401).send({error: "Es necesario el token de autenticación"})         
@@ -236,12 +247,16 @@ router.post('/', function (req, res) { //Actualiza los datos de un jugador
 });
 router.get('/', function(req,res, next){
   //Verificacion de Token
+  fs.appendFile('./LogsG/logs.txt','\nMS-USUARIO-LOGIN(GET) '+ getDate() + "  Traer todos los jugadores:", function(err) {
+    if(err) return console.error(err);
+ });
+
   var token = req.headers['authorization']     
   if(!token){         
      res.status(401).send({error: "Es necesario el token de autenticación"})         
      return     
   }      
-  oken = token.replace('Bearer ', '')
+  token = token.replace('Bearer ', '')
   switch (validar(token, 'usuarios.jugadores.get')){
     case 0: 
     case 1: res.status(403).send({msg: 'token no valido'});  return; 
@@ -321,6 +336,19 @@ function verify(token) {
 function decode(token) {
     return jwt.decode(token, {complete: true});
     //returns null if token is invalid
+}
+function getDate(){
+  let ts = Date.now();
+  let date_ob = new Date(ts);
+  let date = date_ob.getDate();
+  let month = date_ob.getMonth() + 1;
+  let year = date_ob.getFullYear();
+  let hours = date_ob.getHours()-6;
+  let minutes = date_ob.getMinutes();
+  let seconds = date_ob.getSeconds();
+
+  let fulldate=year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds;
+  return fulldate
 }
 module.exports = router;
 
