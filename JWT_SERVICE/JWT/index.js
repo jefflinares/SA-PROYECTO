@@ -2,6 +2,10 @@
 const config = require("./config");
 const express = require('express');
 const app = express();
+const lib = require('./src/lib');
+
+
+
 var bodyParser  = require('body-parser');
 const jwt_service = require("./jwt_service");
 app.use(bodyParser.urlencoded({ extended: false}));
@@ -72,10 +76,12 @@ app.get('/', (req, res)=> {
 
 
 app.post('/token', async function (req, res)  {
+
+  const date = lib.getDate();
   //Obtener las credenciales
   const id = req.query["id"];
   const secret = req.query["secret"];
-
+  lib.appendToLog("[MS - TOKEN] TOKEN (POST) id = "+id+" secret = "+secret);
 
   //Buscar credenciales en la DB
   let query = "SELECT id_servicio, methods FROM servicio "+
@@ -96,13 +102,17 @@ app.post('/token', async function (req, res)  {
       let response = {
         "jwt":jwt_service.sign(payload)
       }
+      lib.appendToLog(" status 201");
       res.status(201).send(response);
     }else {
+      lib.appendToLog(" status 500 Error del Servidor");
       res.status(500).send({message:"mi huevo dijo la gallina"});
     }
   }else{
+    lib.appendToLog(" status 400 Usuario o Secret no válidos ");
     res.status(400).send({message:'Usuario o Secret no válidos'});
   }
+  lib.appendToLog(" at: "+date + "\n");
   
 })
 
