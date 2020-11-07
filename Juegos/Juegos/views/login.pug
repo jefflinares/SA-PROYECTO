@@ -1,0 +1,45 @@
+doctype html
+html
+  head
+    meta(http-equiv="Content-Type", content="text/html;charset=UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js")
+    script(src="https://code.jquery.com/jquery-2.2.2.min.js")
+    link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css")
+    link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css")
+    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js")
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+
+    
+    script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js")
+     
+  body
+  nav(class="navbar navbar-inverse navbar-static-top")
+      div(class="container")
+        a(class="navbar-brand" href="/") Juegos |
+        ul(class="nav navbar-nav")
+  
+  div#login.container
+    div: form(method='post', class='form-vertical' action="/signin")
+      fieldset
+        legend: strong.text-info Inicia sesión para continuar
+
+        if message.error
+          div.alert.alert-danger Missing username or password
+
+        else
+          if message.success
+            div.alert.alert-success You are now connected #{message.success}.
+
+        div.form-group
+          label Username:
+          //input.form-control(name='username', value=user.username, autofocus)
+          input.form-control(name='email', placeholder='email', autofocus)
+
+        div.form-group
+          label Password:
+          input.form-control(name='password', type='password'  )
+
+        div.form-actions
+          input.btn.btn-primary(type='submit', value='Login')

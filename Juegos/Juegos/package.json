@@ -1,0 +1,24 @@
+{
+  "name": "jugadores",
+  "version": "1.0.0",
+  "description": "Backend del servidor de jugadores",
+  "main": "app.js",
+  "scripts": {
+    "test": "test",
+    "start": "node app.js"
+  },
+  "author": "Jefferson Linares",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.0",
+    "cookie-parser": "^1.4.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "http-errors": "^1.8.0",
+    "jsonwebtoken": "^8.5.1",
+    "morgan": "^1.10.0",
+    "mysql": "^2.18.1",
+    "pug": "^3.0.0",
+    "request": "^2.88.2"
+  }
+}

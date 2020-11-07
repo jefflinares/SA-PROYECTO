@@ -1,0 +1,21 @@
+extends layout
+
+block content
+    table.table
+        tr
+          th JUEGO ID
+          th FECHA CREACIÓN
+          th JUGADOR 1
+          th JUGADOR 2
+          th MARCADOR 
+          th FECHA FINALIZACIÓN
+        tbody
+        if juegos.length > 0
+          each game in juegos
+            tr
+              td #{game.id_partida}
+              td #{game.fecha_creacion}
+              td #{game.id_jugador1}
+              td #{game.id_jugador2}
+              td #{game.marcador}
+              td #{game.fecha_finalizado}
