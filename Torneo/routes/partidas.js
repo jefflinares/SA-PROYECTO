@@ -3,11 +3,14 @@ var router = express.Router();
 var regex = require('regex');
 var fs = require('fs');
 const validator = require('validator');
+const axios = require('../node_modules/axios');
+const lib = require('../src/lib');
 const path = require('path');
 var db = require('./db.js');
 const config = require('../config');
 var archivo;
 var now = new Date();
+var token;
 
 router.put('/', (req, res) =>{
     //codigo temporal solo para probar servicio de partidas/{id}
@@ -94,21 +97,34 @@ router.post('/crearPartida', (req, res) => {
 
     var partida = req.body;
     console.log(req.body);
-
+    //var uuid1 = crear_uuid();
+    
     var uuidPartida = partida.uuid;
-    var jugador1Partida = partida.jugador1;
-    var jugador2Partida = partida.jugador2;
-    var ip_juegoPartida = partida.ip_juego;
+    var jugador1Partida = partida.Jugador1;
+    var jugador2Partida = partida.Jugador2;
+    var ip_juegoPartida = partida.IP;
     var estadoPartida = partida.estado;
     var ganadorPartida = partida.ganador;
     var idtorneoPartida = partida.idTorneo;
     var rondaPartida = partida.ronda;
     var fechaCreacionPartida = partida.fechaCreacion;
     var fechaJugadoPartida = partida.fechaJugado;
+    
+    if(uuidPartida==undefined){uuidPartida = crear_uuid();}
+    if(estadoPartida==undefined){estadoPartida="00";}
+    if(ganadorPartida==undefined){ganadorPartida="";}
+    if(rondaPartida==undefined){rondaPartida=1;}
 
-    console.log("uuid:"+ partida.uuid);
+    console.log("uuid:"+ uuidPartida);
+    console.log("j1:"+ jugador1Partida);
+    console.log("j2:"+ jugador2Partida);
+    console.log("ip:"+ ip_juegoPartida);
+    console.log("idTorneo:"+ idtorneoPartida);
+    console.log("estado:"+ estadoPartida);
+    console.log("ganador:"+ ganadorPartida);
+    console.log("ronda:"+ rondaPartida);
 
-    if(uuidPartida == undefined || jugador1Partida == undefined || jugador2Partida == undefined || ip_juegoPartida == undefined || estadoPartida == undefined || idtorneoPartida == undefined || jugador1Partida == undefined || rondaPartida == undefined){
+    if(uuidPartida == undefined || jugador1Partida == undefined || jugador2Partida == undefined || ip_juegoPartida == undefined || estadoPartida == undefined || idtorneoPartida == undefined || rondaPartida == undefined){
         console.log("Datos incorrectos de partida nueva");
         archivo += "\n[PARTIDAS]:Datos incorrectos de partida | " + now.toLocaleTimeString();
         res.statusMessage = "Datos incorrectos de partida nueva";
@@ -116,12 +132,15 @@ router.post('/crearPartida', (req, res) => {
     }else{
         //Codigo para guardar los datos de la nueva partida en la BD
         try{
-            var query = database.query('INSERT INTO BDTORNEOS.PARTIDAS(UUID, JUGADOR1, JUGADOR2, IP_JUEGO, ESTADO, GANADOR, ID_TORNEO, RONDA) VALUES(?,?,?,?,?,?,?, ?)', [uuidPartida, jugador1Partida, jugador2Partida, ip_juegoPartida, estadoPartida, ganadorPartida, idtorneoPartida, rondaPartida], function(error, result){
+            console.log("entro al try");
+            var query = database.query('INSERT INTO BDTORNEOS.PARTIDAS(UUID, JUGADOR1, JUGADOR2, IP_JUEGO, ESTADO, GANADOR, ID_TORNEO, RONDA) VALUES(?,?,?,?,?,?,?, ?)', 
+            [uuidPartida, jugador1Partida, jugador2Partida, ip_juegoPartida, estadoPartida, ganadorPartida, idtorneoPartida, rondaPartida], function(error, result){
                 if(error){
                   console.log("Error al insertar partida nueva en DB ");
                   res.statusMessage="Datos Invalidos";
                   res.status(406).json(objetoPartida);
-                }});
+                }
+            });
         }catch(x){
             console.log("Error en insersión de partida nueva: "+x);
             archivo += "\n[PARTIDAS]:Error en partida nueva | " + now.toLocaleTimeString();
@@ -166,6 +185,87 @@ router.post('/crearPartida', (req, res) => {
     }
     escribirLog();
 });
+
+router.post('/generar', async (req, res)=> {
+    archivo += "\n[PARTIDAS]:POST para generar partida | " + now.toLocaleTimeString();
+    var database = new db();
+    console.log("[PARTIDAS]:Parámetros obtenidos...");
+    console.log(req.body);
+
+    var objetoJugadores = [];
+    var objetoPartida = {
+        id: "xxxxx-xxxxxx-xxxxx",
+        jugadores: []
+    }
+
+    var idPartida = req.body.id;
+    var idTorneo = req.body.idTorneo;
+    token = await lib.getToken();
+
+    if(idPartida==undefined || idTorneo==undefined){
+        console.log("Datos incorrectos de partida a generar");
+        archivo += "\n[PARTIDAS]:Datos incorrectos de partida | " + now.toLocaleTimeString();
+        res.statusMessage = "Datos incorrectos de partida nueva";
+        res.send(objetoPartida);
+    }else{
+
+        var sql = 'SELECT JUGADOR1, JUGADOR2 FROM BDTORNEOS.PARTIDAS WHERE UUID=\''+idPartida+'\' AND ID_TORNEO='+idTorneo;
+        database.query(sql)
+            .then(rows => {
+                //var num = rows[0].ID;
+                console.log("[PARTIDA]:Partida creada exitosamente");
+                archivo += "\n[PARTIDAS]:Partida creada exitosamente | " + now.toLocaleTimeString();
+                console.log(rows);
+                database.close();
+
+                objetoPartida.id = idPartida;
+                objetoPartida.jugadores.push(Number(rows[0].JUGADOR1));
+                objetoPartida.jugadores.push(Number(rows[0].JUGADOR2));
+                var jsonPartida = JSON.stringify(objetoPartida);
+                console.log("----------------------------------------------------------------");
+                console.log(jsonPartida);
+                console.log("----------------------------------------------------------------");
+                console.log('[PARTIDA]:Status:201');
+                archivo += "\n[PARTIDAS]:STATUS 201 | " + now.toLocaleTimeString();
+                console.log(objetoPartida);
+                //req.body.mensaje = "Exito";
+
+                var url = "http://"+config.JUEGOS_SERVICE_HOST+":"+config.JUEGOS_SERVICE_PORT+"/generar";
+
+                let partida_response;//await lib.makeGetPetition(url, null, options);
+    try { 
+            axios.post(url , jsonPartida, { headers: {"Authorization" : `Bearer ${token}`, 'Content-Type':'application/json'}} )
+            .then(resAxios => {
+                //console.log("Respuesta: ",res.data);
+                switch(resAxios.status){
+                    case 201:
+                        partida_response = resAxios.data;
+                        archivo += "[PARTIDAS]: MS-JUEGOS (201) Partida generada | " + now.toLocaleTimeString();
+                        res.status(201).json(resAxios.data);
+                        return;
+                        break;
+                    case 406:
+                        console.log("MS Juegos - 406 Parámetros inválidos ", resAxios.data);
+                        res.status(406).send(resAxios.data);
+                        return;
+                    default:
+                        console.log("MS Juegos - 400 (MS USUARIO) ", resAxios.data);
+                        objetoUsuario = resAxios.data;
+                        res.status(resAxios.status).send(resAxios.data);
+                        return;
+                } 
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+
+    } catch (error) {
+        console.log('Catch: ',error);
+    }    
+})
+    }
+});
+    
 
 
 router.get('/getUuid', (req, res) => {
@@ -330,6 +430,63 @@ router.get('/obtenerJuegos', (req, res) => {
     escribirLog();
 });
 
+router.get('/listarPartidas1/', async (req, res)=>{
+    console.log(req.query.ID);
+    if(token==undefined){
+        token = await lib.getToken();
+    }
+    var objetoPartida = {
+        id:0,
+        jugadores: []
+    }
+    var database = new db();
+        var sql = 'SELECT * FROM BDTORNEOS.PARTIDAS WHERE ID='+req.query.ID;
+        database.query(sql)
+            .then(rows => {
+                database.close();
+                var url = "http://"+config.JUEGOS_SERVICE_HOST + ":" + config.JUEGOS_SERVICE_PORT + "/simular";
+
+                objetoPartida.id = rows[0].UUID;
+                objetoPartida.jugadores.push(rows[0].JUGADOR1);
+                objetoPartida.jugadores.push(rows[0].JUGADOR2);
+                
+                var text = JSON.stringify(objetoPartida);
+                try {
+                        axios.post(url , text, { headers: {"Authorization" : `Bearer ${token}`, 'Content-Type':'application/json'}} )
+                        .then(resAxios => {
+                            //console.log("Respuesta: ",res.data);
+                            switch(resAxios.status){
+                                case 201:
+                                    console.log("[PARTIDAS]:STATUS 201");
+                                    res.redirect("http://localhost:3000/partidas/listarPartidas");
+                                    break;
+                                case 406:
+                                    console.log("MS Juegos - 406 (JUEGO PREVIAMENTE SIMULADO)");
+                                    res.status(406).send(resAxios.data);
+                                    return;
+                                default:
+                                    res.status(resAxios.status).send(resAxios.data);
+                                    return;
+                            } 
+                        })
+                        .catch((error) => {
+                            console.log("Error al intentar la simulación.");
+                            res.status(406).send("Juego ya había sido simulado");
+                            return;
+                        });
+
+                } catch (error) {
+                    console.log('Catch:Error simulacion');
+                }
+
+    
+            }, err => {
+                return database.close().then(() => {
+                    throw err;
+                })
+            })
+});
+
 router.get('/listarPartidas', (req, res)=>{
     archivo += "\n[PARTIDAS]:GET para listar todas las partidas desde interfaz | " + now.toLocaleTimeString();
     console.log("[PARTIDAS]:Listando todas las partidas creadas...");
@@ -368,6 +525,7 @@ router.get('/listarPartidas', (req, res)=>{
                                 "<th>RONDA</th>"+
                                 "<th>FECHA_CREACION</th>"+
                                 "<th>FECHA_JUGADO</th>"+
+                                "<th>Simular</th>"+
                             "</tr>";
                     for(i = 0; i< rows.length; i++){
                         //console.log("For i: "+i);
@@ -383,6 +541,9 @@ router.get('/listarPartidas', (req, res)=>{
                                         "<td>"+rows[i].RONDA+"</td>"+
                                         "<td>"+rows[i].FECHA_CREACION+"</td>"+
                                         "<td>"+rows[i].FECHA_JUGADO+"</td>"+
+                                        "<td><a href='http://localhost:3000/partidas/listarPartidas1?ID="+rows[i].ID + "'>" +
+                                        "<button>Simular Partida</button>"+
+                                        "</a></td>"+
                                     "</tr>";
                     }
                     tabla += "</table>";
@@ -394,6 +555,7 @@ router.get('/listarPartidas', (req, res)=>{
                     //res.send(tabla);
                     escribirLog();
                     res.send(pagina);
+                
                 }else{
                     console.log("[PARTIDAS]:No se encontraron registros de partidas creadas en BD.");
                     tabla = "<table border=1>"+
@@ -409,6 +571,7 @@ router.get('/listarPartidas', (req, res)=>{
                                 "<th>RONDA</th>"+
                                 "<th>FECHA_CREACION</th>"+
                                 "<th>FECHA_JUGADO</th>"+
+                                "<th>Simular</th>"+
                             "</tr>"+
                             "</table>"+
                             "<span>No hay registros de partidas creadas</span>"
@@ -416,12 +579,14 @@ router.get('/listarPartidas', (req, res)=>{
                     pagina = retornaPagina(tabla);
                     res.send(pagina);
                 }
+            
             }, err => {
                 return database.close().then(() => {
                     throw err;
                 })
             })
             escribirLog();
+        
 });
 
 //funcion para generar el uuid para la partida
@@ -480,7 +645,7 @@ function retornaPagina(tabla){
 
 function escribirLog(){
     let actual = fs.readFileSync("torneosLog.txt").toString();
-    console.log("actual: "+actual);
+    //console.log("actual: "+actual);
     fs.writeFileSync("torneosLog.txt", actual+archivo, "");
 }
 

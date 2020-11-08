@@ -7,16 +7,45 @@ block content
     
     .row
       .col-md-4
-        h2 Visualizar Partidas
+        h2 Crear Nueva Partida
         p
-          | Detalle de las partidas creadas para cada torneo
+          | Crear una partida específica
 
-        form(action="http://localhost:3000/partidas/listarPartidas", method="GET")
-          label(for="Nombre") Nombre de Torneo: 
+        form(action="http://localhost:3000/partidas/crearPartida", method="POST")
+          label(for="Jugador1") Jugador1: 
           br
-          button(type="submit") Cargar
+          input(type="text" name="Jugador1")
+          br
+          label(for="Jugador2") Jugador2: 
+          br
+          input(type="text" name="Jugador2")
+          br
+          label(for="IP") IP: 
+          br
+          input(type="text" name="IP")
+          br
+          label(for="idTorneo") Torneo:
+          br
+          input(type="text" name="idTorneo")
+          br
+          button(type="submit") Crear Partida
           hr
+      .col-md-4
+        h2 Generar Partida
+        p
+          | Generar una partida ya existente (/juegos/generar)
 
+        form(action="http://localhost:3000/partidas/generar", method="POST")
+          label(for="id") ID Partida: 
+          br
+          input(type="text" name="id")
+          br
+          label(for="idTorneo") Torneo:
+          br
+          input(type="text" name="idTorneo")
+          br
+          button(type="submit") Generar
+          hr 
       .col-md-4
         h2 Actualizar Partida
         p
@@ -32,5 +61,15 @@ block content
           input(type="text" name="Marcador")
           br
           button(type="submit") Actualizar
-          hr  
+          hr
+      .col-md-4
+        h2 Visualizar Partidas
+        p
+          | Detalle de las partidas creadas para cada torneo
+
+        form(action="http://localhost:3000/partidas/listarPartidas", method="GET")
+          label(for="Nombre") 
+          br
+          button(type="submit") Cargar
+          hr
       

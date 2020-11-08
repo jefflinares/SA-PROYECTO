@@ -132,11 +132,6 @@ router.get('/listarTorneos', (req, res)=>{
         var sql = 'SELECT * FROM BDTORNEOS.TORNEOS';
         database.query(sql)
             .then(rows => {
-                var num = rows[0].ID;
-                var fecha = rows[0].FECHA;
-                console.log(num);
-                objetoTorneo.id = num;
-                database.close();
 
                 var i = 0;
                 var ID = "";
@@ -144,8 +139,14 @@ router.get('/listarTorneos', (req, res)=>{
                 var FECHA = "";
                 var jsonListado = '';
                 var tabla = "";
-                
-                if (rows[0]!=null){
+                console.log("[TORNEOS]:Cantidad de torneos creados => "+rows.length);
+                if (rows.length > 0){
+                    console.log(rows);
+                    var num = rows[0].ID;
+                    var fecha = rows[0].FECHA;
+                    console.log(num);
+                    objetoTorneo.id = num;
+                    database.close();
                     //se crean los encabezados de la tabla
                     tabla = "<table border=1>"+
                             "<tr>"+
@@ -154,7 +155,6 @@ router.get('/listarTorneos', (req, res)=>{
                                 "<th>Fecha</th>"+
                             "</tr>";
                     for(i = 0; i< rows.length; i++){
-                        console.log("For i: "+i);
                         tabla +=    "<tr>"+
                                         "<td>"+rows[i].ID+"</td>"+
                                         "<td>"+rows[i].NOMBRE+"</td>"+
@@ -168,8 +168,8 @@ router.get('/listarTorneos', (req, res)=>{
                     var objetoListado = { Torneos: '' };
                     objetoListado.Juegos = JSON.stringify(jsonListado.replace("\"", ''));
                     tabla += "</table>";
-                    console.log(tabla);
-                    console.log(jsonListado);
+                    //console.log(tabla);
+                    //console.log(jsonListado);
                     console.log("-------------------");
                     console.log(JSON.stringify(jsonListado));
                     archivo += "\n[TORNEOS]:STATUS 201 | " + now.toLocaleTimeString();
@@ -179,6 +179,17 @@ router.get('/listarTorneos', (req, res)=>{
                     //res.send(tabla);
                     res.send(pagina);
                 }
+                tabla = "<table border=1>"+
+                            "<tr>"+
+                                "<th>ID</th>"+
+                                "<th>Torneo</th>"+
+                                "<th>Fecha</th>"+
+                            "</tr>"+
+                            "<tr colspan=1>No hay torneos registrados</tr></table>";
+                var pagina = retornaPagina(tabla);
+                escribirLog();
+                    //res.send(tabla);
+                res.send(pagina);
                 // objetoTorneo.id = num;
                 // objetoTorneo.Nombre = Nombre;
                 // objetoTorneo.Fecha = fecha;
@@ -588,10 +599,10 @@ router.get('/test', (req, res) => {
     pagina += "</div>";
     pagina += "</body>";
     pagina += "</html>";
-    console.log('.....................................................................');
-    console.log(pagina);
-    console.log('.....................................................................');
-    console.log('');
+    //console.log('.....................................................................');
+    //console.log(pagina);
+    //console.log('.....................................................................');
+    //console.log('');
     return pagina;
 }
 
@@ -629,7 +640,7 @@ function totalRondas(totalUsuarios){
 
 function escribirLog(){
     let actual = fs.readFileSync("torneosLog.txt").toString();
-    console.log("actual: "+actual);
+    //console.log("actual: "+actual);
     fs.writeFileSync("torneosLog.txt", actual+archivo, "");
 }
 

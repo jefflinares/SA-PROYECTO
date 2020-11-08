@@ -1,3 +1,4 @@
+const lib = require('./src/lib');
 const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 const config = require('./config');
 const PORT = config.PORT;////para utilizar el puerto definido por la nube, sino utilizar el puerto 3000
@@ -15,7 +16,7 @@ var torneosRouter = require('./routes/torneos');
 var partidasRouter = require('./routes/partidas');
 
 var app = express();
-var token = getToken();
+var token;
 var fs = require('fs');
 var contenido;
 // var contenido = fs.readFileSync("prueba.txt").toString();
@@ -63,53 +64,24 @@ app.use(function(err, req, res, next) {
 });
 
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log('Servidor corriendo en puerto '+PORT);
+  //console.log(await getToken());
 });
 
-function getToken(){
+async function getToken(){
   console.log("*************************************");
   console.log("[APP]:Solicitando token de usuario a servicio jwt...");
   let now = new Date();
   contenido = "\n[MS]:Solicitando token de usuario administrador | "+ now.toLocaleTimeString();
-  console.log(contenido);
-  var access_token;
-  var url = "http://" + config.JWT_SERVICE_HOST + ":" + config.JWT_SERVICE_PORT + "/token"+"?id="+config.TORNEOS_SERVICE_ID+"&secret="+config.TORNEOS_SERVICE_SECRET;
-  console.log("URL Completa:"+url);
-    var req = new XMLHttpRequest();
-    req.open("POST",url);
-    //req.setRequestHeader('Authorization', 'Bearer ' + access_token);
-    //req.setRequestHeader('Content-Type', 'application/json',true);
-    var text = JSON.stringify({"id":config.TORNEOS_SERVICE_ID, "secret":config.TORNEOS_SERVICE_SECRET});
-    var respuesta;
-    
-    req.onreadystatechange = function() {
-        if(req.readyState == 4 && req.status == 201) { 
-            //req.responseText;
-            console.log("entro");
-            try{
-                respuesta = JSON.parse(req.responseText);
-                console.log("Token: "+respuesta.jwt);
-                console.log("[APP]:Token obtenido exitosamente desde servicio jwt!");
-                console.log(text);
-                contenido += "\n[MS]:Token obtenido desde microservicio de JWT | " + now.toLocaleTimeString();
-                return respuesta.jwt;
-            }catch(err){
-                console.log(err);
-            }
-            return respuesta.jwt;
-        }else{
-          respuesta = "[APP]:No se pudo obtener el token";
-          contenido += "\n[MS]:No se pudo obtener el token | " + now.toLocaleTimeString();
-          console.log(respuesta.jwt);
-        }  
-    }
+  token = await lib.getToken();
+  contenido += "\n[MS]:Token obtenido | " + now.toLocaleTimeString();
+  return token;
 }
 
 //archivoLog.end();
-console.log(contenido);
+//console.log(contenido);
 console.log("[MS]:LOG ACTUALIZADO");
-
 let actual = fs.readFileSync("torneosLog.txt").toString();
 fs.writeFileSync("torneosLog.txt", actual+contenido, "");
 

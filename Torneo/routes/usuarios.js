@@ -1,8 +1,10 @@
+const lib = require('../src/lib');
+const axios = require('../node_modules/axios');
 const config = require('../config');
 var express = require('express');
 var router = express.Router();
 const path = require('path');
-const token = require('../app').token;
+var token;
 var http = require('http');
 var fs = require('fs');
 var archivo;
@@ -10,7 +12,7 @@ var now = new Date();
 
 const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 
-router.post('/insertar', (req, res) => {
+router.post('/insertar', async (req, res) => {
     archivo += "\n[USUARIOS]:Entra POST de un nuevo usuario en usuarios/insertar | " + now.toLocaleTimeString();
     console.log("****************************************");
     console.log("[USUARIOS]:Ha ingresado un POST hacia usuarios/insertar ...");
@@ -26,6 +28,8 @@ router.post('/insertar', (req, res) => {
     }
 
     var usuario = req.body;
+    token = await lib.getToken();
+
     console.log("[USUARIOS]:POST de usuario con la siguiente información:");
     console.log(req.body);
 
@@ -35,6 +39,12 @@ router.post('/insertar', (req, res) => {
     var apellidos = usuario.apellido;
     var password = usuario.password;
     var administrador = usuario.administrador;
+    if(administrador==undefined){
+        administrador = false;
+    }else if(administrador == "on"){
+        administrador = true;
+    }
+    console.log("Administrador: "+administrador);
 
     if(email == undefined || nombres == undefined || apellidos == undefined || password == undefined){
         console.log("[USUARIOS]:Datos de usuario no válidos: "+ email + "|"+nombres+"|"+apellidos+"|"+password);
@@ -46,51 +56,88 @@ router.post('/insertar', (req, res) => {
 
         //preparación de objeto json para el usuario
         console.log("[USUARIOS]:Datos válidos");
-        archivo += "\n[USUARIOS]:DATOS CORRECTOS| " + now.toLocaleTimeString();
+        archivo += "\n[USUARIOS]:DATOS CORRECTOS | " + now.toLocaleTimeString();
         objetoUsuario.email = email;
         objetoUsuario.nombres = nombres;
         objetoUsuario.apellidos = apellidos;
         objetoUsuario.administrador = administrador;
+        console.log(objetoUsuario);
         console.log("asigna bien los paràmetros");
         //Luego enviar el token al microservicio de usuarios con la información del formulario
         //id=0, email, nombre, apellido, password, administrador(true, false)  -> direccion /jugadores
-        var url = "http://"+config.USERS_SERVICE_HOST + ":" + config.USERS_SERVICE_PORT + "/jugadores/";
-    try{
-        var req = new XMLHttpRequest();
-        console.log("[USUARIOS]:Token obtenido => "+token);
-        archivo += "\n[USUARIOS]:Se obtiene token => "+ token +"| " + now.toLocaleTimeString();
-        req.open("POST",url);
-        req.setRequestHeader('Authorization', 'Bearer ' + token);
-        req.setRequestHeader('Content-Type', 'application/json',true);
-    
+        var url = "http://"+config.USERS_SERVICE_HOST + ":" + config.USERS_SERVICE_PORT + "/jugadores";
         var text = JSON.stringify(objetoUsuario);
-        var respuesta;
-    
-        req.onreadystatechange = function() {
-            if(req.readyState == 4 && req.status == 201) { 
-                //req.responseText;
-                try{
-                    respuesta = JSON.parse(req.responseText);
-                    console.log("respuesta: " + respuesta.id);
-                    console.log("[USUARIOS]:Usuario insertado exitosamente!");
-                    archivo += "\n[USUARIOS]:Usuarios insertar exitosamente! | " + now.toLocaleTimeString();
-                    console.log(text);
-                    req.statusMessage("[USUARIOS]:Usuario insertado exitosamente!");
-                    req.send(text);
-                }catch(err){
-                    console.log(err);
-                }
-                //return;
-            }else{
-                req.statusMessage("[USUARIOS]:Usuario insertado exitosamente!");
-                req.status(400).json(objetoUsuario);
-            }
-        }
-    }catch(x){
-        console.log("[USUARIOS]:Error al comunicarse con el servicio de usuarios...");
-        archivo += "\n[USUARIOS]:Error al comunicarse con el servicio de usuarios... | " + now.toLocaleTimeString();
-        console.log(x);
+
+    let usuarios_response;//await lib.makeGetPetition(url, null, options);
+    try {
+            
+            axios.post(url , text, { headers: {"Authorization" : `Bearer ${token}`, 'Content-Type':'application/json'}} )
+            .then(resAxios => {
+                //console.log("Respuesta: ",res.data);
+                switch(resAxios.status){
+                    case 200:
+                        usuarios_response = resAxios.data;
+                        res.status(200).json(resAxio.data);
+                        return;
+                        break;
+                    case 400:
+                        console.log("MS Juegos - 400 (MS USUARIO) ", resAxios.data);
+                        objetoUsuario = resAxios.data;
+                        res.status(400).json(objetoUsuario);
+                        return;
+                    default:
+                        console.log("MS Juegos - 400 (MS USUARIO) ", resAxios.data);
+                        objetoUsuario = resAxios.data;
+                        res.status(400).json(objetoUsuario);
+                        return;
+                } 
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+
+    } catch (error) {
+        console.log('Catch: ',error);
     }
+    // try{
+
+    //     console.log("[USUARIOS]:TOKEN => "+token);
+    //     var req = new XMLHttpRequest();
+    //     console.log("[USUARIOS]:Token obtenido => "+token);
+    //     console.log("[USUARIOS]:URL DE SERVICIO => "+url);
+    //     archivo += "\n[USUARIOS]:Se obtiene token => "+ token +"| " + now.toLocaleTimeString();
+    //     req.open("POST",url);
+    //     req.setRequestHeader('Authorization', 'Bearer ' + token);
+    //     req.setRequestHeader('Content-Type', 'application/json',true);
+    
+    //     var text = JSON.stringify(objetoUsuario);
+    //     var respuesta;
+    
+    //     req.onreadystatechange = function() {
+    //         if(req.readyState == 4 && req.status == 201) { 
+    //             //req.responseText;
+    //             try{
+    //                 respuesta = JSON.parse(req.responseText);
+    //                 console.log("respuesta: " + respuesta.id);
+    //                 console.log("[USUARIOS]:Usuario insertado exitosamente!");
+    //                 archivo += "\n[USUARIOS]:Usuarios insertar exitosamente! | " + now.toLocaleTimeString();
+    //                 console.log(text);
+    //                 req.statusMessage("[USUARIOS]:Usuario insertado exitosamente!");
+    //                 req.send(text);
+    //             }catch(err){
+    //                 console.log(err);
+    //             }
+    //             //return;
+    //         }else{
+    //             req.statusMessage("[USUARIOS]:Usuario insertado exitosamente!");
+    //             req.status(400).json(objetoUsuario);
+    //         }
+    //     }
+    // }catch(x){
+    //     console.log("[USUARIOS]:Error al comunicarse con el servicio de usuarios...");
+    //     archivo += "\n[USUARIOS]:Error al comunicarse con el servicio de usuarios... | " + now.toLocaleTimeString();
+    //     console.log(x);
+    // }
     }
     escribirLog();
 });
@@ -129,8 +176,9 @@ router.get('/listadoUsuarios', (req, res)=>{
                 totalUsuarios = 0;
                 console.log(err);
             }
-            return totalUsuarios;
         }
+        req.send(text);
+        return totalUsuarios;
     }
     //req.send(text);
     escribirLog();
@@ -228,7 +276,7 @@ function obtenerTotal(usuarios){
 }
 function escribirLog(){
     let actual = fs.readFileSync("torneosLog.txt").toString();
-    console.log("actual: "+actual);
+    //console.log(actual);
     fs.writeFileSync("torneosLog.txt", actual+archivo, "");
 }
 module.exports = router;

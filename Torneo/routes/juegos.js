@@ -365,7 +365,7 @@ function listarJuegos(){
                 var objetoListado = { Juegos: '' };
                 objetoListado.Juegos = JSON.stringify(jsonListado.replace("\"", ''));
                 tabla += "</table>";
-                console.log(tabla);
+                //console.log(tabla);
                 console.log(jsonListado);
                 console.log("-------------------");
                 console.log(JSON.stringify(jsonListado));
@@ -427,9 +427,9 @@ function retornaPagina(tabla){
     pagina += "</div>";
     pagina += "</body>";
     pagina += "</html>";
-    console.log('.....................................................................');
-    console.log(pagina);
-    console.log('.....................................................................');
+    //console.log('.....................................................................');
+    //console.log(pagina);
+    //console.log('.....................................................................');
     console.log('');
     return pagina;
 }
@@ -437,7 +437,7 @@ function retornaPagina(tabla){
 
 function escribirLog(){
     let actual = fs.readFileSync("torneosLog.txt").toString();
-    console.log("actual: "+actual);
+    //console.log("actual: "+actual);
     fs.writeFileSync("torneosLog.txt", actual+archivo, "");
 }
 

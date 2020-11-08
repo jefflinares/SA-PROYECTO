@@ -1,29 +1,385 @@
 ***********************************************************************************************************************
 *****************************LOG DE OPERACIONES DE MICROSERVICIO DE TORNEOS********************************************
-***********************************************************************************************************************undefinedundefined
-[MS]:Solicitando token de usuario administrador | 9:45:19 AM
-[MS]:No se pudo obtener el token | 9:45:19 AMundefined
-[MS]:Solicitando token de usuario administrador | 9:46:04 AM
-[MS]:No se pudo obtener el token | 9:46:04 AM
-[MS]:Solicitando token de usuario administrador | 9:46:10 AM
-[MS]:No se pudo obtener el token | 9:46:10 AM
-[MS]:Solicitando token de usuario administrador | 9:48:05 AM
-[MS]:No se pudo obtener el token | 9:48:05 AM
-[MS]:Solicitando token de usuario administrador | 9:50:17 AM
-[MS]:No se pudo obtener el token | 9:50:17 AM
-[MS]:Solicitando token de usuario administrador | 9:52:56 AM
-[MS]:No se pudo obtener el token | 9:52:56 AM
-[MS]:Solicitando token de usuario administrador | 10:43:48 AM
-[MS]:No se pudo obtener el token | 10:43:48 AM
-[MS]:Solicitando token de usuario administrador | 10:52:59 AM
-[MS]:No se pudo obtener el token | 10:52:59 AM
-[MS]:Solicitando token de usuario administrador | 11:40:37 AM
-[MS]:No se pudo obtener el token | 11:40:37 AM
-[MS]:Solicitando token de usuario administrador | 11:41:14 AM
-[MS]:No se pudo obtener el token | 11:41:14 AM
-[MS]:Solicitando token de usuario administrador | 11:41:19 AM
-[MS]:No se pudo obtener el token | 11:41:19 AM
-[MS]:Solicitando token de usuario administrador | 11:42:31 AM
-[MS]:Solicitando token de usuario administrador | 11:42:59 AM
-[MS]:Solicitando token de usuario administrador | 11:47:29 AM
-[MS]:Solicitando token de usuario administrador | 11:48:04 AM
+***********************************************************************************************************************undefinedundefinedundefined
+[JUEGOS]:Ingeesa petición GET en juegos/listar | 6:42:57 PM
+[JUEGOS]:Estableciendo conexión con la BD | 6:42:57 PMundefinedundefinedundefined
+[JUEGOS]:Ingresando a POST juegos/registrar | 6:52:35 PM
+[JUEGOS]:Estructura de body en POST: | 6:52:35 PM
+[object JSON]
+[JUEGOS]:Insertando información de nuevo juego en la BD | 6:52:35 PMundefined
+[JUEGOS]:Ingresando a POST juegos/registrar | 6:52:35 PM
+[JUEGOS]:Estructura de body en POST: | 6:52:35 PM
+[object JSON]
+[JUEGOS]:Insertando información de nuevo juego en la BD | 6:52:35 PM
+[JUEGOS]:STATUS 201 | 6:52:35 PM
+[JUEGOS]:Ingeesa petición GET en juegos/listar | 6:52:35 PM
+[JUEGOS]:Estableciendo conexión con la BD | 6:52:35 PMundefined
+[TORNEOS]:GET de listado de torneos | 6:52:35 PMundefined
+[TORNEOS]:GET de listado de torneos | 6:52:35 PM
+[TORNEOS]:STATUS 201 | 6:52:35 PMundefined
+[TORNEOS]:GET de listado de torneos | 6:52:35 PM
+[TORNEOS]:STATUS 201 | 6:52:35 PMundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 6:52:35 PMundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 6:52:35 PM
+[PARTIDAS]:STATUS 201 | 6:52:35 PMundefinedundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 6:57:14 PMundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 6:57:14 PM
+[PARTIDAS]:STATUS 201 | 6:57:14 PMundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 6:57:14 PM
+[PARTIDAS]:STATUS 201 | 6:57:14 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 6:57:14 PMundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 6:57:14 PM
+[PARTIDAS]:STATUS 201 | 6:57:14 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 6:57:14 PM
+[PARTIDAS]:STATUS 201 | 6:57:14 PMundefinedundefinedundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:12:54 PMundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:12:54 PM
+[PARTIDAS]:STATUS 201 | 7:12:54 PMundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:12:54 PM
+[PARTIDAS]:STATUS 201 | 7:12:54 PM
+[PARTIDAS]:POST para generar partida | 7:12:54 PM
+[PARTIDAS]:Partida creada exitosamente | 7:12:54 PM
+[PARTIDAS]:STATUS 201 | 7:12:54 PM[PARTIDAS]: MS-JUEGOS (201) Partida generada | 7:12:54 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:12:54 PMundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:12:54 PM
+[PARTIDAS]:STATUS 201 | 7:12:54 PM
+[PARTIDAS]:POST para generar partida | 7:12:54 PM
+[PARTIDAS]:Partida creada exitosamente | 7:12:54 PM
+[PARTIDAS]:STATUS 201 | 7:12:54 PM[PARTIDAS]: MS-JUEGOS (201) Partida generada | 7:12:54 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:12:54 PM
+[PARTIDAS]:STATUS 201 | 7:12:54 PMundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:12:54 PM
+[PARTIDAS]:STATUS 201 | 7:12:54 PM
+[PARTIDAS]:POST para generar partida | 7:12:54 PM
+[PARTIDAS]:Partida creada exitosamente | 7:12:54 PM
+[PARTIDAS]:STATUS 201 | 7:12:54 PM[PARTIDAS]: MS-JUEGOS (201) Partida generada | 7:12:54 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:12:54 PM
+[PARTIDAS]:STATUS 201 | 7:12:54 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:12:54 PMundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:12:54 PM
+[PARTIDAS]:STATUS 201 | 7:12:54 PM
+[PARTIDAS]:POST para generar partida | 7:12:54 PM
+[PARTIDAS]:Partida creada exitosamente | 7:12:54 PM
+[PARTIDAS]:STATUS 201 | 7:12:54 PM[PARTIDAS]: MS-JUEGOS (201) Partida generada | 7:12:54 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:12:54 PM
+[PARTIDAS]:STATUS 201 | 7:12:54 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:12:54 PM
+[PARTIDAS]:STATUS 201 | 7:12:54 PMundefinedundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:26:25 PMundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:26:25 PM
+[PARTIDAS]:STATUS 201 | 7:26:25 PMundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:26:25 PM
+[PARTIDAS]:STATUS 201 | 7:26:25 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:26:25 PMundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:26:25 PM
+[PARTIDAS]:STATUS 201 | 7:26:25 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:26:25 PM
+[PARTIDAS]:STATUS 201 | 7:26:25 PMundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:26:25 PM
+[PARTIDAS]:STATUS 201 | 7:26:25 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:26:25 PM
+[PARTIDAS]:STATUS 201 | 7:26:25 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:26:25 PMundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:26:25 PM
+[PARTIDAS]:STATUS 201 | 7:26:25 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:26:25 PM
+[PARTIDAS]:STATUS 201 | 7:26:25 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:26:25 PM
+[PARTIDAS]:STATUS 201 | 7:26:25 PMundefinedundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:30:28 PMundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:30:28 PM
+[PARTIDAS]:STATUS 201 | 7:30:28 PMundefinedundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:31:06 PMundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:31:06 PM
+[PARTIDAS]:STATUS 201 | 7:31:06 PMundefinedundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:31:57 PMundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:31:57 PM
+[PARTIDAS]:STATUS 201 | 7:31:57 PMundefinedundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:33:18 PMundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:33:18 PM
+[PARTIDAS]:STATUS 201 | 7:33:18 PMundefinedundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:34:52 PMundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:34:52 PM
+[PARTIDAS]:STATUS 201 | 7:34:52 PMundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:34:52 PM
+[PARTIDAS]:STATUS 201 | 7:34:52 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:34:52 PMundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:34:52 PM
+[PARTIDAS]:STATUS 201 | 7:34:52 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:34:52 PM
+[PARTIDAS]:STATUS 201 | 7:34:52 PMundefinedundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:36:43 PMundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:36:43 PM
+[PARTIDAS]:STATUS 201 | 7:36:43 PMundefinedundefined
+[PARTIDAS]:POST para crear partida | 7:49:10 PMundefined
+[PARTIDAS]:POST para crear partida | 7:49:10 PM
+[PARTIDAS]:Partida creada exitosamente | 7:49:10 PM
+[PARTIDAS]:STATUS 201 | 7:49:10 PMundefined
+[PARTIDAS]:POST para crear partida | 7:49:10 PM
+[PARTIDAS]:Partida creada exitosamente | 7:49:10 PM
+[PARTIDAS]:STATUS 201 | 7:49:10 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:49:10 PMundefined
+[PARTIDAS]:POST para crear partida | 7:49:10 PM
+[PARTIDAS]:Partida creada exitosamente | 7:49:10 PM
+[PARTIDAS]:STATUS 201 | 7:49:10 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:49:10 PM
+[PARTIDAS]:STATUS 201 | 7:49:10 PMundefinedundefined
+[PARTIDAS]:POST para crear partida | 7:50:27 PMundefined
+[PARTIDAS]:POST para crear partida | 7:50:27 PM
+[PARTIDAS]:Partida creada exitosamente | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PMundefined
+[PARTIDAS]:POST para crear partida | 7:50:27 PM
+[PARTIDAS]:Partida creada exitosamente | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PMundefined
+[PARTIDAS]:POST para crear partida | 7:50:27 PM
+[PARTIDAS]:Partida creada exitosamente | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PMundefined
+[PARTIDAS]:POST para crear partida | 7:50:27 PM
+[PARTIDAS]:Partida creada exitosamente | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PMundefined
+[PARTIDAS]:POST para crear partida | 7:50:27 PM
+[PARTIDAS]:Partida creada exitosamente | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PMundefined
+[PARTIDAS]:POST para crear partida | 7:50:27 PM
+[PARTIDAS]:Partida creada exitosamente | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:POST para generar partida | 7:50:27 PM
+[PARTIDAS]:Partida creada exitosamente | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM[PARTIDAS]: MS-JUEGOS (201) Partida generada | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PMundefined
+[PARTIDAS]:POST para crear partida | 7:50:27 PM
+[PARTIDAS]:Partida creada exitosamente | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:POST para generar partida | 7:50:27 PM
+[PARTIDAS]:Partida creada exitosamente | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM[PARTIDAS]: MS-JUEGOS (201) Partida generada | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PMundefined
+[PARTIDAS]:POST para crear partida | 7:50:27 PM
+[PARTIDAS]:Partida creada exitosamente | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:POST para generar partida | 7:50:27 PM
+[PARTIDAS]:Partida creada exitosamente | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM[PARTIDAS]: MS-JUEGOS (201) Partida generada | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PMundefined
+[PARTIDAS]:POST para crear partida | 7:50:27 PM
+[PARTIDAS]:Partida creada exitosamente | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:POST para generar partida | 7:50:27 PM
+[PARTIDAS]:Partida creada exitosamente | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM[PARTIDAS]: MS-JUEGOS (201) Partida generada | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PMundefined
+[PARTIDAS]:POST para crear partida | 7:50:27 PM
+[PARTIDAS]:Partida creada exitosamente | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:POST para generar partida | 7:50:27 PM
+[PARTIDAS]:Partida creada exitosamente | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM[PARTIDAS]: MS-JUEGOS (201) Partida generada | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PMundefined
+[PARTIDAS]:POST para crear partida | 7:50:27 PM
+[PARTIDAS]:Partida creada exitosamente | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:POST para generar partida | 7:50:27 PM
+[PARTIDAS]:Partida creada exitosamente | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM[PARTIDAS]: MS-JUEGOS (201) Partida generada | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PMundefined
+[PARTIDAS]:POST para crear partida | 7:50:27 PM
+[PARTIDAS]:Partida creada exitosamente | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:POST para generar partida | 7:50:27 PM
+[PARTIDAS]:Partida creada exitosamente | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM[PARTIDAS]: MS-JUEGOS (201) Partida generada | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:POST para generar partida | 7:50:27 PM
+[PARTIDAS]:Partida creada exitosamente | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM[PARTIDAS]: MS-JUEGOS (201) Partida generada | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PMundefined
+[PARTIDAS]:POST para crear partida | 7:50:27 PM
+[PARTIDAS]:Partida creada exitosamente | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:POST para generar partida | 7:50:27 PM
+[PARTIDAS]:Partida creada exitosamente | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM[PARTIDAS]: MS-JUEGOS (201) Partida generada | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM
+[PARTIDAS]:POST para generar partida | 7:50:27 PM
+[PARTIDAS]:Partida creada exitosamente | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PM[PARTIDAS]: MS-JUEGOS (201) Partida generada | 7:50:27 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:50:27 PM
+[PARTIDAS]:STATUS 201 | 7:50:27 PMundefinedundefined
+[PARTIDAS]:POST para crear partida | 7:53:43 PMundefined
+[PARTIDAS]:POST para crear partida | 7:53:43 PM
+[PARTIDAS]:Partida creada exitosamente | 7:53:43 PM
+[PARTIDAS]:STATUS 201 | 7:53:43 PMundefined
+[PARTIDAS]:POST para crear partida | 7:53:43 PM
+[PARTIDAS]:Partida creada exitosamente | 7:53:43 PM
+[PARTIDAS]:STATUS 201 | 7:53:43 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:53:43 PMundefined
+[PARTIDAS]:POST para crear partida | 7:53:43 PM
+[PARTIDAS]:Partida creada exitosamente | 7:53:43 PM
+[PARTIDAS]:STATUS 201 | 7:53:43 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:53:43 PM
+[PARTIDAS]:STATUS 201 | 7:53:43 PMundefined
+[PARTIDAS]:POST para crear partida | 7:53:43 PM
+[PARTIDAS]:Partida creada exitosamente | 7:53:43 PM
+[PARTIDAS]:STATUS 201 | 7:53:43 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:53:43 PM
+[PARTIDAS]:STATUS 201 | 7:53:43 PM
+[PARTIDAS]:POST para generar partida | 7:53:43 PM
+[PARTIDAS]:Partida creada exitosamente | 7:53:43 PM
+[PARTIDAS]:STATUS 201 | 7:53:43 PM[PARTIDAS]: MS-JUEGOS (201) Partida generada | 7:53:43 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:53:43 PMundefined
+[PARTIDAS]:POST para crear partida | 7:53:43 PM
+[PARTIDAS]:Partida creada exitosamente | 7:53:43 PM
+[PARTIDAS]:STATUS 201 | 7:53:43 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:53:43 PM
+[PARTIDAS]:STATUS 201 | 7:53:43 PM
+[PARTIDAS]:POST para generar partida | 7:53:43 PM
+[PARTIDAS]:Partida creada exitosamente | 7:53:43 PM
+[PARTIDAS]:STATUS 201 | 7:53:43 PM[PARTIDAS]: MS-JUEGOS (201) Partida generada | 7:53:43 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:53:43 PM
+[PARTIDAS]:STATUS 201 | 7:53:43 PMundefined
+[PARTIDAS]:POST para crear partida | 7:53:43 PM
+[PARTIDAS]:Partida creada exitosamente | 7:53:43 PM
+[PARTIDAS]:STATUS 201 | 7:53:43 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:53:43 PM
+[PARTIDAS]:STATUS 201 | 7:53:43 PM
+[PARTIDAS]:POST para generar partida | 7:53:43 PM
+[PARTIDAS]:Partida creada exitosamente | 7:53:43 PM
+[PARTIDAS]:STATUS 201 | 7:53:43 PM[PARTIDAS]: MS-JUEGOS (201) Partida generada | 7:53:43 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:53:43 PM
+[PARTIDAS]:STATUS 201 | 7:53:43 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:53:43 PMundefined
+[PARTIDAS]:POST para crear partida | 7:53:43 PM
+[PARTIDAS]:Partida creada exitosamente | 7:53:43 PM
+[PARTIDAS]:STATUS 201 | 7:53:43 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:53:43 PM
+[PARTIDAS]:STATUS 201 | 7:53:43 PM
+[PARTIDAS]:POST para generar partida | 7:53:43 PM
+[PARTIDAS]:Partida creada exitosamente | 7:53:43 PM
+[PARTIDAS]:STATUS 201 | 7:53:43 PM[PARTIDAS]: MS-JUEGOS (201) Partida generada | 7:53:43 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:53:43 PM
+[PARTIDAS]:STATUS 201 | 7:53:43 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:53:43 PM
+[PARTIDAS]:STATUS 201 | 7:53:43 PMundefinedundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:56:47 PMundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:56:47 PM
+[PARTIDAS]:STATUS 201 | 7:56:47 PMundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:56:47 PM
+[PARTIDAS]:STATUS 201 | 7:56:47 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:56:47 PMundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:56:47 PM
+[PARTIDAS]:STATUS 201 | 7:56:47 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:56:47 PM
+[PARTIDAS]:STATUS 201 | 7:56:47 PMundefinedundefined
+[PARTIDAS]:POST para crear partida | 7:57:47 PMundefined
+[PARTIDAS]:POST para crear partida | 7:57:47 PM
+[PARTIDAS]:Partida creada exitosamente | 7:57:47 PM
+[PARTIDAS]:STATUS 201 | 7:57:47 PMundefined
+[PARTIDAS]:POST para crear partida | 7:57:47 PM
+[PARTIDAS]:Partida creada exitosamente | 7:57:47 PM
+[PARTIDAS]:STATUS 201 | 7:57:47 PM
+[PARTIDAS]:POST para generar partida | 7:57:47 PM
+[PARTIDAS]:Partida creada exitosamente | 7:57:47 PM
+[PARTIDAS]:STATUS 201 | 7:57:47 PM[PARTIDAS]: MS-JUEGOS (201) Partida generada | 7:57:47 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:57:47 PMundefined
+[PARTIDAS]:POST para crear partida | 7:57:47 PM
+[PARTIDAS]:Partida creada exitosamente | 7:57:47 PM
+[PARTIDAS]:STATUS 201 | 7:57:47 PM
+[PARTIDAS]:POST para generar partida | 7:57:47 PM
+[PARTIDAS]:Partida creada exitosamente | 7:57:47 PM
+[PARTIDAS]:STATUS 201 | 7:57:47 PM[PARTIDAS]: MS-JUEGOS (201) Partida generada | 7:57:47 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 7:57:47 PM
+[PARTIDAS]:STATUS 201 | 7:57:47 PMundefinedundefinedundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 8:00:57 PMundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 8:00:57 PM
+[PARTIDAS]:STATUS 201 | 8:00:57 PMundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 8:00:57 PM
+[PARTIDAS]:STATUS 201 | 8:00:57 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 8:00:57 PMundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 8:00:57 PM
+[PARTIDAS]:STATUS 201 | 8:00:57 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 8:00:57 PM
+[PARTIDAS]:STATUS 201 | 8:00:57 PMundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 8:00:57 PM
+[PARTIDAS]:STATUS 201 | 8:00:57 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 8:00:57 PM
+[PARTIDAS]:STATUS 201 | 8:00:57 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 8:00:57 PMundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 8:00:57 PM
+[PARTIDAS]:STATUS 201 | 8:00:57 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 8:00:57 PM
+[PARTIDAS]:STATUS 201 | 8:00:57 PM
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 8:00:57 PM
+[PARTIDAS]:STATUS 201 | 8:00:57 PMundefinedundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 8:03:37 PMundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 8:03:37 PM
+[PARTIDAS]:STATUS 201 | 8:03:37 PMundefinedundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 8:05:08 PMundefined
+[PARTIDAS]:GET para listar todas las partidas desde interfaz | 8:05:08 PM
+[PARTIDAS]:STATUS 201 | 8:05:08 PMundefined

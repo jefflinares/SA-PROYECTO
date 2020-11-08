@@ -10,28 +10,28 @@ block content
         h2 Agregar Usuario
         p
           form(action="http://localhost:3000/usuarios/insertar", method="post")
-            label(for="textEmail") Email: 
+            label(for="email") Email: 
             br
-            input(type="text", name="textEmail")
+            input(type="text", name="email")
             br
           
-            label(for="textNombre") Nombre:
+            label(for="nombre") Nombre:
             br
-            input(type="text", name="textNombre")
+            input(type="text", name="nombre")
             br
-            label(for="textApellido") Apellido:
+            label(for="apellido") Apellido:
             br
-            input(type="text", name="textApellido")
+            input(type="text", name="apellido")
             br
-            label(for="textPassword") Password:
+            label(for="password") Password:
             br
-            input(type="password", name="textPassword")
+            input(type="password", name="password")
             br
-            label(for="textAdmin") Administrador:
+            label(for="administrador") Administrador:
             br
-            input(type="checkbox", name="checkAdministrador")
+            input(type="checkbox", name="administrador")
             br 
-            button(type="submit" name="botonAgregar") Agregar
+            button(type="submit") Agregar
 
             br
       .col-md-4
