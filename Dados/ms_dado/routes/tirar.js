@@ -91,7 +91,7 @@ function validar(token, metodo){
     var token_verify=verify(token);
     if(token_verify){
       var token_decode= decode(token);
-      if( token_decode.payload.scopes.indexOf(metodo)==-1){
+      if( token_decode.payload.scope.indexOf(metodo)==-1){
         return 1; //no tiene acceso al metodo
       }
       else{
@@ -164,7 +164,7 @@ function getDate(){
   let date = date_ob.getDate();
   let month = date_ob.getMonth() + 1;
   let year = date_ob.getFullYear();
-  let hours = date_ob.getHours();
+  let hours = date_ob.getHours()-6;
   let minutes = date_ob.getMinutes();
   let seconds = date_ob.getSeconds();
 

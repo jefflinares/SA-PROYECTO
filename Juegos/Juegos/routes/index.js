@@ -1,4 +1,5 @@
 var express = require('express');
+const axios = require('axios');
 var router = express.Router();
 const lib = require('../src/lib');
 const config = require('../config');
@@ -129,7 +130,8 @@ router.post('/signin', async function(req, res, next) {
 
 
 router.post('/generar', async function(req, res, next) {
-  let peticion = "GENERAR (POST) "+String(new Date());
+  lib.appendToLog("[MS - JUEGOS] GENERAR (POST) ");
+  let fecha_hora_peticion = lib.getDate() +"\n";
   var token = req.headers['authorization']     
   if(!token){         
       res.status(401).send(
@@ -137,7 +139,7 @@ router.post('/generar', async function(req, res, next) {
               error: config.MSG_TOKEN_AUTENTICACION
           }
       ); 
-      lib.appendToLog(peticion + "Status 404 - " + config.MSG_TOKEN_AUTENTICACION)        
+      lib.appendToLog(" Status 404 - " + config.MSG_TOKEN_AUTENTICACION)        
       return     
   }      
   //console.log('validar token');
@@ -145,9 +147,10 @@ router.post('/generar', async function(req, res, next) {
   
   switch (lib.validar(token, 'juegos.generar')){
     case 0: 
-    case 1: res.status(403).send({msg: 'token no valido'}); 
-            lib.appendToLog(peticion + " Status 403"); return; 
-    case 3: res.status(403).send({msg: 'token expirado'});  return; 
+    case 1: res.status(403).send({msg: 'token no valido at: '+fecha_hora_peticion}); 
+            lib.appendToLog(" Status 403 Token No válido at: "+fecha_hora_peticion); return; 
+    case 3: res.status(403).send({msg: 'token expirado'});
+    lib.appendToLog(" Status 403 Token Expirado at: "+fecha_hora_peticion);  return; 
     case 2: break;
   }
 
@@ -161,40 +164,36 @@ router.post('/generar', async function(req, res, next) {
           {res.status(406).send({msg: 'Parámetros no válidos'});  return;}
       
       //BUSCAR A LOS JUGADORES
-      /*
+      
       let player1_id = jugadores[0];
       let player2_id = jugadores[1];
       let player1_response = await findPlayer(player1_id);
       let player2_response = await findPlayer(player2_id);
 
       if(player1_response){
-        switch(player1_response.status)
-        {
-          case 200:
-            console.log('Usuario encontrado: '+player1_response.data.id);
-            break;
-          case 404:
-            res.status(404).send({msg: 'Jugador no encontrado: '+player1_id});
-            return;                
-        }
+            lib.appendToLog('Usuario1 encontrado:  '+player1_id);
+      }else{
+        console.log('Generar Jugador 1 no encontrado en el ms de usuarios');
+        lib.appendToLog(' Status 404 - Jugador1 no Encontrado: '+player1_id+" at: "+fecha_hora_peticion);
+        res.status(404).send({msg: 'Jugador no encontrado: '+player1_id});
+        return;
       }
       
       if(player2_response){
-        switch(player2_response.status){
-          case 200: 
-            console.log('Usuario encontrado: '+player2_response.data.id);
-            break;
-          case 404:
-            res.status(404).send({msg: 'Jugador no encontrado: '+player2_id});
-        }
+            lib.appendToLog('Usuario2 encontrado:  '+player2_id);
+      }else{
+        lib.appendToLog(' Status 404 - Jugador2 no Encontrado: '+player1_id+" at: "+fecha_hora_peticion);
+        res.status(404).send({msg: 'Jugador no encontrado: '+player2_id});
+        return;
       }
 
-*/
+
 
 
       if(connection == null){
         if(!conectar()){
           console.log('Ocurrio un error al Conectar a la base de datos de Juegos');
+          lib.appendToLog('Status 500 - Error al intentar conectar con la DB at: '+fecha_hora_peticion);
           res.status(500).send({msg: 'Error al intentar conectar con la DB'});
           return;
         }
@@ -208,11 +207,13 @@ router.post('/generar', async function(req, res, next) {
 
       if(response_query == null ){
         console.log('ocurrio un error al intentar ejecutar un comando');
+        lib.appendToLog('Status 500 - Error al intentar conectar con la DB at: '+fecha_hora_peticion);
         res.status(500).send({msg: 'Error al intentar insertar el juego con la DB'});
         return;
       }
       else{
         //if(response_query == true ){
+          lib.appendToLog(' Status 201 - Partida Creada at: '+fecha_hora_peticion);
           res.status(201).send({msg: 'Partida Creada'});
         //} 
       }
@@ -221,6 +222,7 @@ router.post('/generar', async function(req, res, next) {
 
   }else{
     //NO ENVÍO LOS PARÁMETROS VÁLIDOS
+    lib.appendToLog(' Status 406 - Parametros no válidos: '+fecha_hora_peticion);
     res.status(406).send({msg: 'Parámetros no válidos'}); return;
   }
 
@@ -230,26 +232,71 @@ router.post('/generar', async function(req, res, next) {
 
 async function findPlayer(id)
 {
-    let url = 'http://'+config.USERS_SERVICE_HOST+"/"+config.USERS_SERVICE_PORT+"/jugadores/"+id;
-
-    token = await lib.refrescarToken(token);
-
-    const options = {
-      headers: {
-          //'Content-Type': 'application/x-www-form-urlencoded'
-          Authorization: `Bearer ${token}`
+  let fecha_hora_peticion = lib.getDate();
+    if(token === null){
+      try {
+        token = await lib.getToken();
+      } catch (error) {
+        console.log(error);
       }
-    };
 
-    return await lib.makeGetPetition(url,null, options);
+    }else{
+      token = await lib.refrescarToken(token);
+    }
+  console.log('Token del servidor de juegos para buscar jugador: '+token);
+    let url = 'http://'+config.USERS_SERVICE_HOST+":"+config.USERS_SERVICE_PORT+"/jugadores/"+id;
 
+    
+
+    try {
+
+      return new Promise( (resolve, reject) => {
+        axios.get(
+          url, 
+           
+          { 
+              headers: {
+                  "Authorization" : `Bearer ${token}`
+              }
+          } 
+          )
+      .then(res => {
+          //console.log("Respuesta: ",res.data);
+          switch(res.status){
+              case 200:
+                  lib.appendToLog('[MS - JUEGOS] Usuarios -> Obtener usuario Status 200 at: '+fecha_hora_peticion);
+                  console.log('Partida ha sido actualizada en el MS - Torneos', res.data);
+                  resolve(true);
+                  break;
+              case 404:
+                  lib.appendToLog('[MS - JUEGOS] Usuarios -> Obtener usuario Status 404 at: '+fecha_hora_peticion);
+                  console.log("MS Usuarios -obtener usuario 404 Part", res.data);
+                  resolve(false);
+              default:
+                  console.log(res.data);
+                  resolve(false);
+          }
+          
+      })
+      .catch((error) => {
+          console.log(error);
+          resolve(false);
+      });
+
+      });
+      
+  } catch (error) {
+      console.log('Error con el MS Usuarios',error); 
+      return false;       
+  } 
 }
 
 
 
 router.post('/simular', async function(req, res) {
 
-
+  lib.appendToLog("[MS - JUEGOS] SIMULAR (POST) ");
+  let fecha_hora_peticion = lib.getDate() +"\n";
   var token_request = req.headers['authorization']     
   if(!token_request){         
       res.status(401).send(
@@ -264,8 +311,14 @@ router.post('/simular', async function(req, res) {
   
   switch (lib.validar(token_request, 'juegos.simular')){
     case 0: 
-    case 1: res.status(403).send({msg: 'token no valido'});  return; 
-    case 3: res.status(403).send({msg: 'token expirado'});  return; 
+    case 1: 
+      res.status(403).send({msg: 'token no valido'});  
+      lib.appendToLog(' Status 403 - Token no Valido at: '+fecha_hora_peticion);
+      return; 
+    case 3: 
+      res.status(403).send({msg: 'token expirado'});  
+      lib.appendToLog(' Status 403 - Token expirado at: '+fecha_hora_peticion);
+      return; 
     case 2: break;
   }
 
@@ -276,6 +329,7 @@ router.post('/simular', async function(req, res) {
   if(id && jugadores){
     if(jugadores.length != 2){
       res.status(406).send({msg: 'Parámetros no válidos'}); 
+      lib.appendToLog(' Status 406 - Parametros no válidos at: '+fecha_hora_peticion);
       return;
     }
 
@@ -283,6 +337,7 @@ router.post('/simular', async function(req, res) {
       if(!conectar()){
         console.log('Ocurrio un error al Conectar a la base de datos de Juegos');
         res.status(500).send({msg: 'Error al intentar conectar con la DB'});
+        lib.appendToLog(' Status 500 - Error al intentar conectar con la DB'+fecha_hora_peticion);
         return;
       }
     }
@@ -290,34 +345,26 @@ router.post('/simular', async function(req, res) {
       //BUSCAR A LOS JUGADORES
       let player1_id = jugadores[0];
       let player2_id = jugadores[1];
-      /*
-      
       let player1_response = await findPlayer(player1_id);
       let player2_response = await findPlayer(player2_id);
 
       if(player1_response){
-        switch(player1_response.status)
-        {
-          case 200:
-            console.log('Usuario encontrado: '+player1_response.data.id);
-            break;
-          case 404:
-            res.status(404).send({msg: 'Jugador no encontrado: '+player1_id});
-            return;                
-        }
+            lib.appendToLog('Usuario1 encontrado:  '+player1_id);
+        
+      }else{
+        lib.appendToLog('Status 404 - Usuario1 no encontrado:  '+player1_id + fecha_hora_peticion);
+        res.status(404).send({msg: 'Jugador no encontrado: '+player1_id});
+        return;                
       }
-
       if(player2_response){
-        switch(player2_response.status){
-          case 200: 
-            console.log('Usuario encontrado: '+player2_response.data.id);
-            break;
-          case 404:
-            res.status(404).send({msg: 'Jugador no encontrado: '+player2_id});
-        }
+          lib.appendToLog('Usuario2 encontrado:  '+player2_id);
+      }else{
+        lib.appendToLog('Status 404 - Usuario2 no encontrado:  '+player2_id + fecha_hora_peticion);
+        res.status(404).send({msg: 'Jugador no encontrado: '+player2_id});
+
       }
 
-      */
+      
       //VERIFICAR QUE EL ID DEL JUEGO SEA VÁLIDO Y QUE NO SE HAYA JUGADO
       
       let query = "SELECT * FROM PARTIDA WHERE id_partida = '"+id+"';"
@@ -342,6 +389,7 @@ router.post('/simular', async function(req, res) {
           let resultado =  await juego.simular(token,player1_id, player2_id, id_partida);
           console.log('Partida simulada FIN.',resultado);
           res.status(201).send({msg:'Partida Simulada'});
+          lib.appendToLog('Status 201 - Partida Simulada '+fecha_hora_peticion);
 
           //ACTUALIZAR FECHA QUE SE FINALIZO
           query = 'UPDATE PARTIDA SET fecha_finalizado = '+connection.escape(new Date())+', '+
@@ -357,10 +405,12 @@ router.post('/simular', async function(req, res) {
           //RESPONDER AL SERVIDOR DE TORNEOS CON EL MARCADOR
         }else{
           res.status(406).send({msg: 'El juego ya se ha simulado anteriormente'});
+          lib.appendToLog('Status 406 - El juego ya se ha simulado anteriormente');
           return;
         }
       }else{
         res.status(406).send({msg: 'Parametro ID inválido'})
+        lib.appendToLog('Status 406 - Parametro ID inválido' +fecha_hora_peticion);
         return;
       }
     
@@ -370,6 +420,7 @@ router.post('/simular', async function(req, res) {
 
   }else{
     res.status(406).send({msg:'Parámetros no válidos'});
+    lib.appendToLog('Status 406 - Parametros no válidos' +fecha_hora_peticion);
   }
 
 });

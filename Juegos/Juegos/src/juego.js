@@ -1,6 +1,7 @@
 const config = require('../config');
 const axios = require('axios');
 const lib = require('./lib');
+const { getDate } = require('./lib');
 
 //DEFINICIÓN DE LOS 5 PIRATAS
 let piratas = 
@@ -68,6 +69,7 @@ function actualizarPosition(pirata, numero_casillas){
             pirata.casilla_actual = siguiente_casilla;
             break;
     }
+    lib.appendToLog(simulacion_cadena);
     console.log(simulacion_cadena);
 }
 
@@ -83,6 +85,7 @@ function actualizarPosition(pirata, numero_casillas){
  */
 async function simular(token, id_usuario1, id_usuario2, id_partida){
     //console.log('Inicio simulación Token: '+token);
+    lib.appendToLog('--------------------------------INICIO SIMULACIÓN------------------------------\n');
     let pirata1 = { pirata: getPirata(), monedas: MONEDAS, casilla_actual: 0, usuario: 1, id_usuario: id_usuario1 };
     let pirata2 = { pirata: getPirata(), monedas: MONEDAS, casilla_actual: 0, usuario: 2, id_usuario: id_usuario2 };
     while(pirata1 == pirata2){
@@ -94,7 +97,7 @@ async function simular(token, id_usuario1, id_usuario2, id_partida){
     let numero_casillas = 0;
     while(posicion_max < CASILLAS_TABLERO){
         //MIENTRAS NO HAYA GANADOR   
-        console.log("Empieza turno para: " + (turno == 1 ? ("Pirata "+pirata1.pirata) : ("Pirata "+pirata2.pirata)));
+        lib.appendToLog("Empieza turno para: " + (turno == 1 ? ("Pirata "+pirata1.pirata) : ("Pirata "+pirata2.pirata)) +"\n" );
         let dados = await getDados(token);
         if(dados !== undefined){
             if(dados.length == NUMERO_DADOS){   
@@ -119,9 +122,11 @@ async function simular(token, id_usuario1, id_usuario2, id_partida){
                                 pirata2.casilla_actual ;
             }else{
                 //ESTO SERÍA RARO
+                lib.appendToLog('El servicio de Dados no retorno 2 dados, si no únicamente: '+dados.length+' dados.');
                 console.log('El servicio de Dados no retorno 2 dados, si no únicamente: '+dados.length+' dados.');
             }
         }else{
+            lib.appendToLog('No fue posible obtener los dados: ');
             console.log('No fue posible obtener los dados');
         }
     }
@@ -131,6 +136,7 @@ async function simular(token, id_usuario1, id_usuario2, id_partida){
                     ganador: pirata1.casilla_actual >= 100 ? pirata1 : pirata2,
                     perdedor: pirata1.casilla_actual >= 100 ? pirata2 : pirata1
                 };
+    lib.appendToLog("Felicidades Pirata "+result.ganador.pirata+" Has ganado!!\nFIN DEL JUEGO!!");
     console.log("Felicidades Pirata "+result.ganador.pirata+" Has ganado!!\nFIN DEL JUEGO!!");
     //sendResultToTournament(result);
     return result;
@@ -161,6 +167,7 @@ function defTurno(p1, p2){
  * @param {'Recibe el token del Micro servicio de Juegos para tirar los dados'} token 
  */
 async function getDados(token){
+    let fecha_hora_peticion = getDate();
     //console.log('Token decodificado: ',lib.decode(token));
     let url = 'http://'+config.DADOS_SERVICE_HOST+":"+config.DADOS_SERVICE_PORT+"/tirar/"+String(NUMERO_DADOS);
     const options = {
@@ -181,9 +188,11 @@ async function getDados(token){
                         resolve(dados_response);
                         break;
                     case 400:
+                        lib.appendToLog('[MS - JUEGOS] Simulación Fallo solictar datos Status 400 at: '+fecha_hora_peticion);
                         console.log("MS Juegos - 400 (MS Dados) ", res.data);
                         return null;
                     default:
+                        lib.appendToLog('[MS - JUEGOS] Simulación Fallo solictar datos Status 40X at: '+fecha_hora_peticion);
                         console.log("MS Juegos - 400 (MS Dados) ", res.data);
                         return null;
                 }
@@ -228,12 +237,15 @@ async function sendResultToTournament(resultado){
             //console.log("Respuesta: ",res.data);
             switch(res.status){
                 case 201:
+                    lib.appendToLog('[MS - JUEGOS] Simulación -> Torneos Actualizar partida servicio de Torneos Status 201 at: '+fecha_hora_peticion);
                     console.log('Partida ha sido actualizada en el MS - Torneos', res.data);
                     break;
                 case 404:
+                    lib.appendToLog('[MS - JUEGOS] Simulación -> Torneos partida no encontrada Statuys 404 at: '+fecha_hora_peticion);
                     console.log("MS Torneos - 404 Partida no encontrada", res.data);
                     break;
                 case 406:
+                    lib.appendToLog('[MS - JUEGOS] Simulación -> Torneos partida Parámetros no válidos Status 406 at: '+fecha_hora_peticion);
                     console.log("MS Torneos - 406 Parámetros no válidos", res.data);
                     break;
                 default:
