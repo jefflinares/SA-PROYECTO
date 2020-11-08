@@ -184,7 +184,7 @@ function validar(token, metodo){
 
 function verify(token) {
     var verifyOptions = {
-        expiresIn:  "25m",
+        expiresIn:  "10d",
         algorithm:  ["RS256"]
     };
     try{

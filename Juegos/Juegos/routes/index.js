@@ -173,6 +173,7 @@ router.post('/generar', async function(req, res, next) {
       if(player1_response){
             lib.appendToLog('Usuario1 encontrado:  '+player1_id);
       }else{
+        console.log('Generar Jugador 1 no encontrado en el ms de usuarios');
         lib.appendToLog(' Status 404 - Jugador1 no Encontrado: '+player1_id+" at: "+fecha_hora_peticion);
         res.status(404).send({msg: 'Jugador no encontrado: '+player1_id});
         return;
@@ -288,10 +289,6 @@ async function findPlayer(id)
       console.log('Error con el MS Usuarios',error); 
       return false;       
   } 
-
-    
-    //return await lib.makeGetPetition(url,null, options);
-
 }
 
 
