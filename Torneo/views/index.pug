@@ -6,3 +6,26 @@ block content
       p Este es el microservicio de administración de torneos, desde aquí se podrán crear nuevos torenos y asignar nuevos jugadores a cada torneo y cada una de sus llaves.
       p
         a(class="btn btn-primary btn-lg" href="/usuarios" role="button") Iniciar
+  div#login.container
+    div: form(method='post', class='form-vertical' action="/login")
+      fieldset
+        legend: strong.text-info Inicia sesión para continuar
+
+        if message.error
+          div.alert.alert-danger Missing username or password
+
+        else
+          if message.success
+            div.alert.alert-success You are now connected #{message.success}.
+
+        div.form-group
+          label Username:
+          //input.form-control(name='username', value=user.username, autofocus)
+          input.form-control(name='email', placeholder='email', autofocus)
+
+        div.form-group
+          label Password:
+          input.form-control(name='password', type='password'  )
+
+        div.form-actions
+          input.btn.btn-primary(type='submit', value='Login')
